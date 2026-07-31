@@ -52,6 +52,18 @@ The carrier must:
 
 The request driver validates the carrier against public `main`, then dispatches `.github/workflows/tradeos-public-exact-head.yml` on public `main`. The carrier cannot modify the controller used for its own run and cannot weaken profile contracts. A later private commit invalidates the exact-head evidence.
 
+## Observable evidence linkage
+
+Every carrier-dispatched run is bound to:
+
+- the validated `requestId` from the one-file carrier;
+- the carrier pull-request number supplied by the trusted driver, not by the JSON payload;
+- a controller `run-name` containing the request ID and exact private SHA;
+- the immutable controller run URL;
+- a sanitized final comment written back to the carrier PR.
+
+The final comment reports only fixed evidence fields: public-controller status, input status, read-only credential status, exact checkout outcome, scope status, profile status and stage counts, failure label, exact SHAs, run URL, and closed verdict. Raw private output is never copied into the comment.
+
 ## Private checkout boundary
 
 - private checkout uses `PRIVATE_REPO_READ_TOKEN` only;
