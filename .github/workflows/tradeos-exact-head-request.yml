@@ -1,0 +1,106 @@
+name: tradeOS exact-head request driver
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - .github/exact-head-request.json
+
+permissions:
+  contents: read
+  actions: write
+  pull-requests: read
+
+concurrency:
+  group: tradeos-exact-head-request-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'ci/exact-head-request/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify carrier scope
+        id: scope
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          CURRENT_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          [[ "$HEAD_REPO" == "$CURRENT_REPO" ]]
+          [[ "$HEAD_REF" == ci/exact-head-request/* ]]
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA...$HEAD_SHA")
+          [[ "${#changed[@]}" == 1 ]]
+          [[ "${changed[0]}" == '.github/exact-head-request.json' ]]
+          echo 'status=PASS' >> "$GITHUB_OUTPUT"
+
+      - name: Validate fixed request payload
+        id: request
+        if: steps.scope.outputs.status == 'PASS'
+        env:
+          REQUEST_PATH: .github/exact-head-request.json
+        run: node scripts/validate-exact-head-request.mjs
+
+      - name: Dispatch controller on public main
+        if: steps.request.outputs.status == 'PASS'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'tradeos-public-exact-head.yml',
+              ref: 'main',
+              inputs: {
+                privateExactSha: '${{ steps.request.outputs.privateExactSha }}',
+                expectedBaseSha: '${{ steps.request.outputs.expectedBaseSha }}',
+                expectedMainSha: '${{ steps.request.outputs.expectedMainSha }}',
+                validationProfile: '${{ steps.request.outputs.validationProfile }}',
+                expectedChangedFileCount: '${{ steps.request.outputs.expectedChangedFileCount }}',
+              },
+            });
+
+      - name: Publish sanitized carrier result
+        if: always()
+        shell: bash
+        env:
+          REQUEST_ID: ${{ steps.request.outputs.requestId }}
+          VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
+          PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
+          REQUEST_STATUS: ${{ steps.request.outputs.status }}
+          SCOPE_STATUS: ${{ steps.scope.outputs.status }}
+        run: |
+          {
+            echo '## tradeOS exact-head request carrier'
+            echo
+            echo "- Request ID: \`${REQUEST_ID:-NOT_RUN}\`"
+            echo "- Validation profile: **${VALIDATION_PROFILE:-NOT_RUN}**"
+            echo "- Exact private SHA: \`${PRIVATE_EXACT_SHA:-NOT_RUN}\`"
+            echo "- Carrier scope: **${SCOPE_STATUS:-NOT_RUN}**"
+            echo "- Request validation: **${REQUEST_STATUS:-NOT_RUN}**"
+            echo
+            echo 'The controller runs from public main. The carrier cannot supply commands, weaken profile contracts, upload artifacts, deploy, or write production systems.'
+          } >> "$GITHUB_STEP_SUMMARY"
