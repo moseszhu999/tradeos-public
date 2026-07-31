@@ -20,11 +20,17 @@ test('rejects private-source and artifact-shaped paths', () => {
 });
 
 test('rejects credentials, live backend URLs, and artifact workflows', () => {
-  assert.ok(scanContent('-----BEGIN PRIVATE KEY-----').includes('PRIVATE_KEY'));
-  assert.ok(scanContent('https://abcdefghijk.supabase.co').includes('SUPABASE_URL'));
-  assert.ok(scanContent('uses: actions/upload-artifact@v4').includes('UPLOAD_ARTIFACT'));
-  assert.ok(scanContent('persist-credentials: true').includes('PERSIST_CREDENTIALS_TRUE'));
-  assert.ok(scanContent('pull_request_target:').includes('PULL_REQUEST_TARGET'));
+  const privateKey = ['-----BEGIN', 'PRIVATE KEY-----'].join(' ');
+  const backendUrl = ['https://', 'abcdefghijk', '.supabase.co'].join('');
+  const uploadArtifact = ['uses:', 'actions/upload-artifact@v4'].join(' ');
+  const persistedCredential = ['persist-credentials:', 'true'].join(' ');
+  const pullRequestTarget = ['pull_request_target', ':'].join('');
+
+  assert.ok(scanContent(privateKey).includes('PRIVATE_KEY'));
+  assert.ok(scanContent(backendUrl).includes('SUPABASE_URL'));
+  assert.ok(scanContent(uploadArtifact).includes('UPLOAD_ARTIFACT'));
+  assert.ok(scanContent(persistedCredential).includes('PERSIST_CREDENTIALS_TRUE'));
+  assert.ok(scanContent(pullRequestTarget).includes('PULL_REQUEST_TARGET'));
 });
 
 test('allows secret names and sanitized architecture text', () => {
