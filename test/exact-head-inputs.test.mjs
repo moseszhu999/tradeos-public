@@ -15,6 +15,48 @@ test('accepts a bounded exact-head request', () => {
   });
   assert.equal(result.status, 'PASS');
   assert.deepEqual(result.errors, []);
+  assert.equal(result.requestId, 'manual-run');
+  assert.equal(result.carrierPrNumber, '0');
+});
+
+test('accepts a carrier-bound request identifier and PR number', () => {
+  const result = validateExactHeadInputs({
+    REQUEST_ID: 'tradeos-private-token-check-v2',
+    CARRIER_PR_NUMBER: '3',
+    PRIVATE_EXACT_SHA: shaA,
+    EXPECTED_BASE_SHA: shaA,
+    EXPECTED_MAIN_SHA: '',
+    VALIDATION_PROFILE: 'bounded-runtime',
+    EXPECTED_CHANGED_FILE_COUNT: '0',
+  });
+  assert.equal(result.status, 'PASS');
+  assert.deepEqual(result.errors, []);
+});
+
+test('rejects malformed carrier identity inputs', () => {
+  const result = validateExactHeadInputs({
+    REQUEST_ID: 'manual-run',
+    CARRIER_PR_NUMBER: '3',
+    PRIVATE_EXACT_SHA: shaA,
+    EXPECTED_BASE_SHA: shaA,
+    EXPECTED_MAIN_SHA: '',
+    VALIDATION_PROFILE: 'bounded-runtime',
+    EXPECTED_CHANGED_FILE_COUNT: '0',
+  });
+  assert.equal(result.status, 'FAIL');
+  assert.ok(result.errors.includes('CARRIER_REQUEST_ID_REQUIRED'));
+
+  const malformed = validateExactHeadInputs({
+    REQUEST_ID: 'bad id',
+    CARRIER_PR_NUMBER: '-1',
+    PRIVATE_EXACT_SHA: shaA,
+    EXPECTED_BASE_SHA: shaA,
+    EXPECTED_MAIN_SHA: '',
+    VALIDATION_PROFILE: 'bounded-runtime',
+    EXPECTED_CHANGED_FILE_COUNT: '0',
+  });
+  assert.ok(malformed.errors.includes('INVALID_REQUEST_ID'));
+  assert.ok(malformed.errors.includes('INVALID_CARRIER_PR_NUMBER'));
 });
 
 test('rejects uppercase and abbreviated SHAs', () => {

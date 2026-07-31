@@ -1,8 +1,19 @@
 name: tradeOS public exact-head CI
+run-name: tradeOS exact-head ${{ inputs.requestId }} ${{ inputs.privateExactSha }}
 
 on:
   workflow_dispatch:
     inputs:
+      requestId:
+        description: Stable public request identifier
+        required: false
+        default: manual-run
+        type: string
+      carrierPrNumber:
+        description: Public carrier PR number, or 0 for a manual run
+        required: false
+        default: '0'
+        type: string
       privateExactSha:
         description: Lowercase 40-character private commit SHA
         required: true
@@ -34,6 +45,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: tradeos-public-exact-head-${{ inputs.privateExactSha }}-${{ inputs.validationProfile }}
@@ -74,6 +86,8 @@ jobs:
         id: inputs
         shell: bash
         env:
+          REQUEST_ID: ${{ inputs.requestId }}
+          CARRIER_PR_NUMBER: ${{ inputs.carrierPrNumber }}
           PRIVATE_EXACT_SHA: ${{ inputs.privateExactSha }}
           EXPECTED_BASE_SHA: ${{ inputs.expectedBaseSha }}
           EXPECTED_MAIN_SHA: ${{ inputs.expectedMainSha }}
@@ -206,6 +220,7 @@ jobs:
         if: always()
         shell: bash
         env:
+          REQUEST_ID: ${{ inputs.requestId }}
           VALIDATION_PROFILE: ${{ inputs.validationProfile }}
           PRIVATE_EXACT_SHA: ${{ inputs.privateExactSha }}
           EXPECTED_BASE_SHA: ${{ inputs.expectedBaseSha }}
@@ -225,6 +240,7 @@ jobs:
           const lines = [
             '## tradeOS public exact-head CI',
             '',
+            `- Request ID: \`${value(process.env.REQUEST_ID)}\``,
             `- Validation profile: **${process.env.VALIDATION_PROFILE}**`,
             `- Exact private SHA: \`${process.env.ACTUAL_SHA || process.env.PRIVATE_EXACT_SHA}\``,
             `- Exact merge base: \`${process.env.MERGE_BASE || process.env.EXPECTED_BASE_SHA}\``,
@@ -238,8 +254,63 @@ jobs:
             'Raw private output remains runner-local, sealed, and deleted. No artifact is uploaded, no deployment is performed, and no production write is permitted.',
           ];
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join('\n')}\n`);
-          console.log(`TRADEOS_PUBLIC_EXACT_HEAD profile=${process.env.VALIDATION_PROFILE} verdict=${value(process.env.VERDICT)} failure_stage=${value(process.env.FAILURE_STAGE)}`);
+          console.log(`TRADEOS_PUBLIC_EXACT_HEAD request=${value(process.env.REQUEST_ID)} profile=${process.env.VALIDATION_PROFILE} verdict=${value(process.env.VERDICT)} failure_stage=${value(process.env.FAILURE_STAGE)}`);
           NODE
+
+      - name: Comment sanitized verdict on carrier
+        if: always() && inputs.carrierPrNumber != '0'
+        uses: actions/github-script@v7
+        env:
+          CARRIER_PR_NUMBER: ${{ inputs.carrierPrNumber }}
+          REQUEST_ID: ${{ inputs.requestId }}
+          VALIDATION_PROFILE: ${{ inputs.validationProfile }}
+          PRIVATE_EXACT_SHA: ${{ steps.scope.outputs.actual_sha || inputs.privateExactSha }}
+          MERGE_BASE: ${{ steps.scope.outputs.merge_base || inputs.expectedBaseSha }}
+          PUBLIC_STATUS: ${{ steps.public_contracts.outputs.status }}
+          INPUT_STATUS: ${{ steps.inputs.outputs.status }}
+          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
+          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
+          SCOPE_STATUS: ${{ steps.scope.outputs.status }}
+          PROFILE_STATUS: ${{ steps.profile.outputs.status }}
+          PASSED_STEPS: ${{ steps.profile.outputs.passed_step_count }}
+          STEP_COUNT: ${{ steps.profile.outputs.step_count }}
+          VERDICT: ${{ steps.final.outputs.verdict }}
+          FAILURE_STAGE: ${{ steps.final.outputs.failure_stage }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const issue_number = Number(process.env.CARRIER_PR_NUMBER);
+            if (!Number.isInteger(issue_number) || issue_number <= 0) {
+              core.setFailed('Invalid carrier PR number.');
+              return;
+            }
+            const value = (input) => input || 'NOT_RUN';
+            const body = [
+              '## tradeOS public exact-head result',
+              '',
+              `- Request ID: \`${value(process.env.REQUEST_ID)}\``,
+              `- Controller run: ${process.env.RUN_URL}`,
+              `- Validation profile: **${value(process.env.VALIDATION_PROFILE)}**`,
+              `- Exact private SHA: \`${value(process.env.PRIVATE_EXACT_SHA)}\``,
+              `- Exact merge base: \`${value(process.env.MERGE_BASE)}\``,
+              `- Public controller contracts: **${value(process.env.PUBLIC_STATUS)}**`,
+              `- Input validation: **${value(process.env.INPUT_STATUS)}**`,
+              `- Read-only credential: **${value(process.env.CREDENTIAL_STATUS)}**`,
+              `- Exact private checkout: **${value(process.env.PRIVATE_CHECKOUT_OUTCOME)}**`,
+              `- Scope verification: **${value(process.env.SCOPE_STATUS)}**`,
+              `- Fixed profile result: **${value(process.env.PROFILE_STATUS)}**`,
+              `- Fixed profile stages: **${process.env.PASSED_STEPS || '0'}/${process.env.STEP_COUNT || '0'}**`,
+              `- Failure stage: **${value(process.env.FAILURE_STAGE)}**`,
+              `- Final verdict: **${value(process.env.VERDICT)}**`,
+              '',
+              'Raw private output remained runner-local and sealed. No artifact, deployment, production write, chain submission, payment, settlement, or token movement was performed.',
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body,
+            });
 
       - name: Delete private checkout and sealed logs
         if: always()

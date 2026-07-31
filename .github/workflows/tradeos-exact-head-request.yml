@@ -75,6 +75,8 @@ jobs:
               workflow_id: 'tradeos-public-exact-head.yml',
               ref: 'main',
               inputs: {
+                requestId: '${{ steps.request.outputs.requestId }}',
+                carrierPrNumber: '${{ github.event.pull_request.number }}',
                 privateExactSha: '${{ steps.request.outputs.privateExactSha }}',
                 expectedBaseSha: '${{ steps.request.outputs.expectedBaseSha }}',
                 expectedMainSha: '${{ steps.request.outputs.expectedMainSha }}',
@@ -102,5 +104,5 @@ jobs:
             echo "- Carrier scope: **${SCOPE_STATUS:-NOT_RUN}**"
             echo "- Request validation: **${REQUEST_STATUS:-NOT_RUN}**"
             echo
-            echo 'The controller runs from public main. The carrier cannot supply commands, weaken profile contracts, upload artifacts, deploy, or write production systems.'
+            echo 'The controller runs from public main and reports its sanitized final verdict back to this carrier PR. The carrier cannot supply commands, weaken profile contracts, upload artifacts, deploy, or write production systems.'
           } >> "$GITHUB_STEP_SUMMARY"
