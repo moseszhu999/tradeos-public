@@ -25,7 +25,7 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       startsWith(github.event.pull_request.head.ref, 'ci/exact-head-request/')
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Check out exact carrier head
         uses: actions/checkout@v4
@@ -64,8 +64,47 @@ jobs:
           REQUEST_PATH: .github/exact-head-request.json
         run: node scripts/validate-exact-head-request.mjs
 
-      - name: Dispatch controller on public main
+      - name: Validate read-only private credential presence
+        id: credential
         if: steps.request.outputs.status == 'PASS'
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+        run: |
+          if [[ -n "$PRIVATE_TOKEN" ]]; then
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          else
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out exact private commit for preflight
+        id: private_checkout
+        if: steps.credential.outputs.status == 'PASS'
+        uses: actions/checkout@v4
+        with:
+          repository: moseszhu999/chaintrace-app
+          ref: ${{ steps.request.outputs.privateExactSha }}
+          token: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+          path: private-preflight
+          persist-credentials: false
+          fetch-depth: 1
+          clean: true
+
+      - name: Verify exact private checkout identity
+        id: private_verify
+        if: steps.private_checkout.outcome == 'success'
+        shell: bash
+        env:
+          EXPECTED_PRIVATE_SHA: ${{ steps.request.outputs.privateExactSha }}
+        run: |
+          set -euo pipefail
+          actual_sha="$(git -C private-preflight rev-parse HEAD)"
+          [[ "$actual_sha" == "$EXPECTED_PRIVATE_SHA" ]]
+          echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          echo "actual_sha=$actual_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch controller on public main
+        if: steps.private_verify.outputs.status == 'PASS'
         uses: actions/github-script@v7
         with:
           script: |
@@ -92,17 +131,48 @@ jobs:
           REQUEST_ID: ${{ steps.request.outputs.requestId }}
           VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
           PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
+          ACTUAL_PRIVATE_SHA: ${{ steps.private_verify.outputs.actual_sha }}
           REQUEST_STATUS: ${{ steps.request.outputs.status }}
           SCOPE_STATUS: ${{ steps.scope.outputs.status }}
+          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
+          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
+          PRIVATE_VERIFY_STATUS: ${{ steps.private_verify.outputs.status }}
         run: |
           {
             echo '## tradeOS exact-head request carrier'
             echo
             echo "- Request ID: \`${REQUEST_ID:-NOT_RUN}\`"
             echo "- Validation profile: **${VALIDATION_PROFILE:-NOT_RUN}**"
-            echo "- Exact private SHA: \`${PRIVATE_EXACT_SHA:-NOT_RUN}\`"
+            echo "- Requested private SHA: \`${PRIVATE_EXACT_SHA:-NOT_RUN}\`"
+            echo "- Checked-out private SHA: \`${ACTUAL_PRIVATE_SHA:-NOT_RUN}\`"
             echo "- Carrier scope: **${SCOPE_STATUS:-NOT_RUN}**"
             echo "- Request validation: **${REQUEST_STATUS:-NOT_RUN}**"
+            echo "- Read-only credential: **${CREDENTIAL_STATUS:-NOT_RUN}**"
+            echo "- Exact private checkout: **${PRIVATE_CHECKOUT_OUTCOME:-NOT_RUN}**"
+            echo "- SHA equality: **${PRIVATE_VERIFY_STATUS:-NOT_RUN}**"
             echo
             echo 'The controller runs from public main and reports its sanitized final verdict back to this carrier PR. The carrier cannot supply commands, weaken profile contracts, upload artifacts, deploy, or write production systems.'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Delete private preflight checkout
+        if: always()
+        shell: bash
+        run: |
+          chmod -R u+rwX private-preflight 2>/dev/null || true
+          rm -rf private-preflight
+
+      - name: Enforce carrier preflight
+        if: always()
+        shell: bash
+        env:
+          SCOPE_STATUS: ${{ steps.scope.outputs.status }}
+          REQUEST_STATUS: ${{ steps.request.outputs.status }}
+          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
+          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
+          PRIVATE_VERIFY_STATUS: ${{ steps.private_verify.outputs.status }}
+        run: |
+          [[ "$SCOPE_STATUS" == 'PASS' ]]
+          [[ "$REQUEST_STATUS" == 'PASS' ]]
+          [[ "$CREDENTIAL_STATUS" == 'PASS' ]]
+          [[ "$PRIVATE_CHECKOUT_OUTCOME" == 'success' ]]
+          [[ "$PRIVATE_VERIFY_STATUS" == 'PASS' ]]
