@@ -1,4 +1,4 @@
-import { appendFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -10,29 +10,97 @@ const build = ['npm', ['run', 'build']];
 const contractsCompile = ['npm', ['run', 'contracts:compile']];
 const contractsTest = ['npm', ['run', 'contracts:test']];
 
+const CORE_FILES = Object.freeze([
+  'app/api/integrations/agents/mcp/route.ts',
+  'lib/tradeos-agent-gateway/context.ts',
+  'lib/tradeos-agent-gateway/client-identity.ts',
+  'lib/tradeos-agent-gateway/mcp-server.ts',
+  'tests/tradeos-agent-gateway/mcp-contract.test.ts',
+]);
+
+const CORE_PATTERNS = Object.freeze([
+  ['app/api/integrations/agents/mcp/route.ts', /initialize/i],
+  ['app/api/integrations/agents/mcp/route.ts', /tools\/list/i],
+  ['app/api/integrations/agents/mcp/route.ts', /tools\/call/i],
+  ['app/api/integrations/agents/mcp/route.ts', /WWW-Authenticate/i],
+  ['lib/tradeos-agent-gateway/context.ts', /authorization/i],
+  ['lib/tradeos-agent-gateway/context.ts', /(organization|tenant)/i],
+  ['lib/tradeos-agent-gateway/context.ts', /role/i],
+  ['lib/tradeos-agent-gateway/client-identity.ts', /codex/i],
+  ['lib/tradeos-agent-gateway/client-identity.ts', /workbuddy/i],
+  ['lib/tradeos-agent-gateway/client-identity.ts', /unknown/i],
+  ['lib/tradeos-agent-gateway/mcp-server.ts', /baseServer/i],
+  ['lib/tradeos-agent-gateway/mcp-server.ts', /contextProvider/i],
+  ['lib/tradeos-agent-gateway/mcp-server.ts', /handle/i],
+  ['tests/tradeos-agent-gateway/mcp-contract.test.ts', /tools\/list/i],
+  ['tests/tradeos-agent-gateway/mcp-contract.test.ts', /(cross.organization|cross.tenant)/i],
+  ['tests/tradeos-agent-gateway/mcp-contract.test.ts', /confirmation/i],
+  ['tests/tradeos-agent-gateway/mcp-contract.test.ts', /audit/i],
+  ['tests/tradeos-agent-gateway/mcp-contract.test.ts', /service_role/i],
+]);
+
+const CODEX_EVIDENCE = Object.freeze({
+  requiredFiles: ['tests/tradeos-agent-gateway/codex-integration.test.ts'],
+  filePatterns: [
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /codex/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /initialize/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /tools\/list/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /tools\/call/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /(ordinary|user bearer|human bearer)/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /(cross.organization|cross.tenant)/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /confirmation/i],
+    ['tests/tradeos-agent-gateway/codex-integration.test.ts', /audit/i],
+  ],
+});
+
+const WORKBUDDY_EVIDENCE = Object.freeze({
+  requiredFiles: ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts'],
+  filePatterns: [
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /workbuddy/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /initialize/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /tools\/list/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /tools\/call/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /(ordinary|user bearer|human bearer)/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /(cross.organization|cross.tenant)/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /confirmation/i],
+    ['tests/tradeos-agent-gateway/workbuddy-integration.test.ts', /audit/i],
+  ],
+});
+
+const CORE_EVIDENCE = Object.freeze({ requiredFiles: CORE_FILES, filePatterns: CORE_PATTERNS });
+
 export const PROFILE_DEFINITIONS = Object.freeze({
   'bounded-runtime': {
-    markers: [],
+    evidence: null,
     commands: [install, unit, typecheck],
   },
   'agent-client-contract': {
-    markers: ['mcp', 'confirmation', 'audit'],
+    evidence: CORE_EVIDENCE,
     commands: [install, unit, typecheck],
   },
   'codex-integration': {
-    markers: ['codex', 'mcp'],
+    evidence: {
+      requiredFiles: [...CORE_FILES, ...CODEX_EVIDENCE.requiredFiles],
+      filePatterns: [...CORE_PATTERNS, ...CODEX_EVIDENCE.filePatterns],
+    },
     commands: [install, unit, typecheck, build],
   },
   'workbuddy-integration': {
-    markers: ['workbuddy', 'mcp'],
+    evidence: {
+      requiredFiles: [...CORE_FILES, ...WORKBUDDY_EVIDENCE.requiredFiles],
+      filePatterns: [...CORE_PATTERNS, ...WORKBUDDY_EVIDENCE.filePatterns],
+    },
     commands: [install, unit, typecheck, build],
   },
   'web-product': {
-    markers: [],
+    evidence: null,
     commands: [install, unit, typecheck, build],
   },
   'main-release': {
-    markers: [],
+    evidence: {
+      ...CORE_EVIDENCE,
+      anyOf: [CODEX_EVIDENCE, WORKBUDDY_EVIDENCE],
+    },
     commands: [install, unit, typecheck, build, contractsCompile, contractsTest],
   },
 });
@@ -43,19 +111,48 @@ function writeOutput(key, value) {
   appendFileSync(output, `${key}=${value}\n`, { encoding: 'utf8' });
 }
 
-function appendSealed(logPath, label, result) {
-  appendFileSync(logPath, `\n===== ${label} =====\n`, { encoding: 'utf8' });
-  if (result.stdout) appendFileSync(logPath, result.stdout, { encoding: 'utf8' });
-  if (result.stderr) appendFileSync(logPath, result.stderr, { encoding: 'utf8' });
+function appendSealed(logPath, label, output = '') {
+  appendFileSync(logPath, `\n===== ${label} =====\n${output}`, { encoding: 'utf8' });
 }
 
-function runMarker(repoPath, pattern, logPath) {
-  const result = spawnSync('git', ['-C', repoPath, 'grep', '-I', '-i', '-l', '-e', pattern, '--', '.'], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  appendSealed(logPath, `marker:${pattern}`, result);
-  return result.status === 0;
+function verifyEvidenceSet(repoPath, evidence) {
+  if (!evidence) return { passed: true, failures: [] };
+  const failures = [];
+
+  for (const relativePath of evidence.requiredFiles || []) {
+    const absolutePath = join(repoPath, relativePath);
+    if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) {
+      failures.push(`MISSING_FILE:${relativePath}`);
+    }
+  }
+
+  for (const [relativePath, pattern] of evidence.filePatterns || []) {
+    const absolutePath = join(repoPath, relativePath);
+    if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) {
+      failures.push(`MISSING_PATTERN_FILE:${relativePath}`);
+      continue;
+    }
+    const content = readFileSync(absolutePath, 'utf8');
+    if (!pattern.test(content)) failures.push(`MISSING_PATTERN:${relativePath}:${pattern.source}`);
+  }
+
+  if (evidence.anyOf?.length) {
+    const alternatives = evidence.anyOf.map((candidate) => verifyEvidenceSet(repoPath, candidate));
+    if (!alternatives.some((candidate) => candidate.passed)) {
+      failures.push('NO_REAL_CLIENT_INTEGRATION');
+      alternatives.forEach((candidate, index) => {
+        failures.push(...candidate.failures.map((failure) => `ALTERNATIVE_${index + 1}:${failure}`));
+      });
+    }
+  }
+
+  return { passed: failures.length === 0, failures };
+}
+
+function runEvidence(repoPath, evidence, logPath) {
+  const result = verifyEvidenceSet(repoPath, evidence);
+  appendSealed(logPath, 'canonical-evidence', `${result.failures.join('\n')}\n`);
+  return result.passed;
 }
 
 function runCommand(repoPath, command, args, logPath) {
@@ -69,7 +166,7 @@ function runCommand(repoPath, command, args, logPath) {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  appendSealed(logPath, `${command} ${args.join(' ')}`, result);
+  appendSealed(logPath, `${command} ${args.join(' ')}`, `${result.stdout || ''}${result.stderr || ''}`);
   return result.status === 0;
 }
 
@@ -82,15 +179,15 @@ export function runFixedProfile({ repoPath, profile, runnerTemp }) {
   const logPath = join(runnerTemp, 'tradeos-private-profile.log');
   writeFileSync(logPath, '', { encoding: 'utf8', mode: 0o600 });
   const steps = [
-    ...definition.markers.map((pattern) => ({ kind: 'marker', label: `marker:${pattern}`, pattern })),
-    ...definition.commands.map(([command, args]) => ({ kind: 'command', label: `${command}:${args[0]}`, command, args })),
+    ...(definition.evidence ? [{ kind: 'evidence', label: 'canonical-evidence', evidence: definition.evidence }] : []),
+    ...definition.commands.map(([command, args]) => ({ kind: 'command', label: `${command}:${args.join(':')}`, command, args })),
   ];
 
   let passedStepCount = 0;
   let failureStage = 'NONE';
   for (const step of steps) {
-    const passed = step.kind === 'marker'
-      ? runMarker(repoPath, step.pattern, logPath)
+    const passed = step.kind === 'evidence'
+      ? runEvidence(repoPath, step.evidence, logPath)
       : runCommand(repoPath, step.command, step.args, logPath);
     if (!passed) {
       failureStage = step.label;
