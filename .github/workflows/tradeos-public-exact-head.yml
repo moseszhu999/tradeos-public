@@ -1,0 +1,262 @@
+name: tradeOS public exact-head CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      privateExactSha:
+        description: Lowercase 40-character private commit SHA
+        required: true
+        type: string
+      expectedBaseSha:
+        description: Exact merge base; main-release uses the same exact main SHA
+        required: true
+        type: string
+      expectedMainSha:
+        description: Required for main-release and must equal privateExactSha
+        required: false
+        default: ''
+        type: string
+      validationProfile:
+        description: Fixed public-safe validation profile
+        required: true
+        type: choice
+        options:
+          - bounded-runtime
+          - agent-client-contract
+          - codex-integration
+          - workbuddy-integration
+          - web-product
+          - main-release
+      expectedChangedFileCount:
+        description: Exact changed-file count; main-release requires 0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tradeos-public-exact-head-${{ inputs.privateExactSha }}-${{ inputs.validationProfile }}
+  cancel-in-progress: false
+
+jobs:
+  exact-head:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out public CI controller
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate public controller
+        id: public_contracts
+        shell: bash
+        run: |
+          set +e
+          npm test > "$RUNNER_TEMP/tradeos-public-contracts.log" 2>&1
+          code=$?
+          if [[ "$code" == 0 ]]; then
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          else
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+          fi
+          echo "runner_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Validate dispatch inputs
+        id: inputs
+        shell: bash
+        env:
+          PRIVATE_EXACT_SHA: ${{ inputs.privateExactSha }}
+          EXPECTED_BASE_SHA: ${{ inputs.expectedBaseSha }}
+          EXPECTED_MAIN_SHA: ${{ inputs.expectedMainSha }}
+          VALIDATION_PROFILE: ${{ inputs.validationProfile }}
+          EXPECTED_CHANGED_FILE_COUNT: ${{ inputs.expectedChangedFileCount }}
+        run: |
+          set +e
+          node scripts/exact-head-inputs.mjs > "$RUNNER_TEMP/tradeos-inputs.log" 2>&1
+          echo "runner_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Validate read-only private credential presence
+        id: credential
+        if: steps.public_contracts.outputs.status == 'PASS' && steps.inputs.outputs.status == 'PASS'
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+        run: |
+          if [[ -n "$PRIVATE_TOKEN" ]]; then
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          else
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out exact private commit
+        id: private_checkout
+        if: steps.credential.outputs.status == 'PASS'
+        uses: actions/checkout@v4
+        with:
+          repository: moseszhu999/chaintrace-app
+          ref: ${{ inputs.privateExactSha }}
+          token: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+          path: private-repo
+          persist-credentials: false
+          fetch-depth: 0
+          clean: true
+
+      - name: Check out live private main ref
+        id: private_main_checkout
+        if: steps.private_checkout.outcome == 'success' && inputs.validationProfile == 'main-release'
+        uses: actions/checkout@v4
+        with:
+          repository: moseszhu999/chaintrace-app
+          ref: main
+          token: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+          path: private-main
+          persist-credentials: false
+          fetch-depth: 1
+          clean: true
+
+      - name: Verify exact head, merge base, live main, and file count
+        id: scope
+        if: steps.private_checkout.outcome == 'success' && (inputs.validationProfile != 'main-release' || steps.private_main_checkout.outcome == 'success')
+        shell: bash
+        env:
+          PRIVATE_REPO_PATH: ${{ github.workspace }}/private-repo
+          PRIVATE_MAIN_REPO_PATH: ${{ github.workspace }}/private-main
+          PRIVATE_EXACT_SHA: ${{ inputs.privateExactSha }}
+          EXPECTED_BASE_SHA: ${{ inputs.expectedBaseSha }}
+          EXPECTED_MAIN_SHA: ${{ inputs.expectedMainSha }}
+          VALIDATION_PROFILE: ${{ inputs.validationProfile }}
+          EXPECTED_CHANGED_FILE_COUNT: ${{ inputs.expectedChangedFileCount }}
+        run: |
+          set +e
+          node scripts/verify-private-scope.mjs > "$RUNNER_TEMP/tradeos-scope.log" 2>&1
+          echo "runner_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run selected fixed profile with sealed output
+        id: profile
+        if: steps.scope.outputs.status == 'PASS'
+        shell: bash
+        env:
+          VALIDATION_PROFILE: ${{ inputs.validationProfile }}
+          PRIVATE_REPO_PATH: ${{ github.workspace }}/private-repo
+        run: |
+          set +e
+          node scripts/run-private-profile.mjs > "$RUNNER_TEMP/tradeos-profile-controller.log" 2>&1
+          echo "runner_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Finalize closed verdict
+        id: final
+        if: always()
+        shell: bash
+        env:
+          VALIDATION_PROFILE: ${{ inputs.validationProfile }}
+          PUBLIC_STATUS: ${{ steps.public_contracts.outputs.status }}
+          INPUT_STATUS: ${{ steps.inputs.outputs.status }}
+          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
+          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
+          PRIVATE_MAIN_CHECKOUT_OUTCOME: ${{ steps.private_main_checkout.outcome }}
+          SCOPE_STATUS: ${{ steps.scope.outputs.status }}
+          PROFILE_STATUS: ${{ steps.profile.outputs.status }}
+          PROFILE_FAILURE_STAGE: ${{ steps.profile.outputs.failure_stage }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+
+          const value = (name) => process.env[name] || 'NOT_RUN';
+          let verdict = 'NOT_RUN';
+          let failureStage = value('PROFILE_FAILURE_STAGE');
+
+          if (value('PUBLIC_STATUS') === 'FAIL') {
+            verdict = 'FAIL';
+            failureStage = 'PUBLIC_CONTROLLER';
+          } else if (value('INPUT_STATUS') === 'FAIL') {
+            verdict = 'FAIL';
+            failureStage = 'INPUT_VALIDATION';
+          } else if (value('CREDENTIAL_STATUS') !== 'PASS' || value('PRIVATE_CHECKOUT_OUTCOME') !== 'success') {
+            verdict = 'INFRASTRUCTURE_BLOCKED';
+            failureStage = 'PRIVATE_CHECKOUT';
+          } else if (process.env.VALIDATION_PROFILE === 'main-release' && value('PRIVATE_MAIN_CHECKOUT_OUTCOME') !== 'success') {
+            verdict = 'INFRASTRUCTURE_BLOCKED';
+            failureStage = 'PRIVATE_MAIN_CHECKOUT';
+          } else if (value('SCOPE_STATUS') !== 'PASS') {
+            verdict = 'FAIL';
+            failureStage = 'EXACT_SCOPE';
+          } else if (value('PROFILE_STATUS') === 'PASS') {
+            verdict = 'PASS';
+            failureStage = 'NONE';
+          } else if (value('PROFILE_STATUS') === 'FAIL') {
+            verdict = process.env.VALIDATION_PROFILE === 'main-release' ? 'BASELINE_FAILURE' : 'FAIL';
+          }
+
+          appendFileSync(process.env.GITHUB_OUTPUT, `verdict=${verdict}\nfailure_stage=${failureStage}\n`, 'utf8');
+          NODE
+
+      - name: Publish sanitized status
+        if: always()
+        shell: bash
+        env:
+          VALIDATION_PROFILE: ${{ inputs.validationProfile }}
+          PRIVATE_EXACT_SHA: ${{ inputs.privateExactSha }}
+          EXPECTED_BASE_SHA: ${{ inputs.expectedBaseSha }}
+          ACTUAL_SHA: ${{ steps.scope.outputs.actual_sha }}
+          MERGE_BASE: ${{ steps.scope.outputs.merge_base }}
+          ACTUAL_MAIN_SHA: ${{ steps.scope.outputs.actual_main_sha }}
+          MAIN_REF_EQUALITY: ${{ steps.scope.outputs.main_ref_equality }}
+          CHANGED_FILE_COUNT: ${{ steps.scope.outputs.changed_file_count }}
+          PASSED_STEPS: ${{ steps.profile.outputs.passed_step_count }}
+          STEP_COUNT: ${{ steps.profile.outputs.step_count }}
+          VERDICT: ${{ steps.final.outputs.verdict }}
+          FAILURE_STAGE: ${{ steps.final.outputs.failure_stage }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const value = (input) => input || 'NOT_RUN';
+          const lines = [
+            '## tradeOS public exact-head CI',
+            '',
+            `- Validation profile: **${process.env.VALIDATION_PROFILE}**`,
+            `- Exact private SHA: \`${process.env.ACTUAL_SHA || process.env.PRIVATE_EXACT_SHA}\``,
+            `- Exact merge base: \`${process.env.MERGE_BASE || process.env.EXPECTED_BASE_SHA}\``,
+            `- Live private main SHA: \`${value(process.env.ACTUAL_MAIN_SHA)}\``,
+            `- Main ref equality: **${value(process.env.MAIN_REF_EQUALITY)}**`,
+            `- Changed files: **${process.env.CHANGED_FILE_COUNT || '0'}**`,
+            `- Fixed profile stages: **${process.env.PASSED_STEPS || '0'}/${process.env.STEP_COUNT || '0'}**`,
+            `- Failure stage: **${value(process.env.FAILURE_STAGE)}**`,
+            `- Final verdict: **${value(process.env.VERDICT)}**`,
+            '',
+            'Raw private output remains runner-local, sealed, and deleted. No artifact is uploaded, no deployment is performed, and no production write is permitted.',
+          ];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join('\n')}\n`);
+          console.log(`TRADEOS_PUBLIC_EXACT_HEAD profile=${process.env.VALIDATION_PROFILE} verdict=${value(process.env.VERDICT)} failure_stage=${value(process.env.FAILURE_STAGE)}`);
+          NODE
+
+      - name: Delete private checkout and sealed logs
+        if: always()
+        shell: bash
+        run: |
+          chmod -R u+rwX private-repo private-main "$RUNNER_TEMP"/tradeos-*.log 2>/dev/null || true
+          rm -rf private-repo private-main
+          rm -f "$RUNNER_TEMP"/tradeos-public-contracts.log
+          rm -f "$RUNNER_TEMP"/tradeos-inputs.log
+          rm -f "$RUNNER_TEMP"/tradeos-scope.log
+          rm -f "$RUNNER_TEMP"/tradeos-profile-controller.log
+          rm -f "$RUNNER_TEMP"/tradeos-private-profile.log
+
+      - name: Enforce final verdict
+        if: always()
+        shell: bash
+        env:
+          VERDICT: ${{ steps.final.outputs.verdict }}
+        run: |
+          [[ "$VERDICT" == 'PASS' ]]
