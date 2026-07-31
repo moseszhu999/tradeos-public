@@ -37,6 +37,21 @@ Inputs cannot supply shell commands, executable arguments, SQL, or dynamic expre
 
 The existence of documentation or a string mentioning a client is not sufficient. Client profiles require canonical implementation paths and dedicated executable acceptance contracts.
 
+## Controlled request carrier
+
+The controller is dispatched from a reviewed same-repository pull request rather than by copying private source or exposing a general command input.
+
+The carrier must:
+
+- use a branch beginning with `ci/exact-head-request/`;
+- come from `moseszhu999/tradeos-public`, never a fork;
+- change exactly one file: `.github/exact-head-request.json`;
+- provide exactly the approved request keys;
+- use lowercase 40-character SHAs and one fixed profile;
+- contain no command, executable argument, SQL, path override, environment override, or deployment instruction.
+
+The request driver validates the carrier against public `main`, then dispatches `.github/workflows/tradeos-public-exact-head.yml` on public `main`. The carrier cannot modify the controller used for its own run and cannot weaken profile contracts. A later private commit invalidates the exact-head evidence.
+
 ## Private checkout boundary
 
 - private checkout uses `PRIVATE_REPO_READ_TOKEN` only;
