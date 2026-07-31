@@ -1,0 +1,36 @@
+name: tradeOS public controller CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tradeos-public-controller-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-controller:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out public repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run controller contracts
+        run: npm test
+
+      - name: Enforce public boundary
+        run: node scripts/scan-public-boundary.mjs
