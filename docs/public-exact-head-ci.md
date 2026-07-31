@@ -50,6 +50,17 @@ The carrier must:
 - use lowercase 40-character SHAs and one fixed profile;
 - contain no command, executable argument, SQL, path override, environment override, or deployment instruction.
 
+Before dispatch, the trusted carrier driver performs a fail-closed private-read preflight:
+
+1. confirm `PRIVATE_REPO_READ_TOKEN` is present;
+2. check out `moseszhu999/chaintrace-app` at the exact requested SHA;
+3. use `persist-credentials: false`;
+4. compare the checked-out `HEAD` with the requested lowercase 40-character SHA;
+5. delete the temporary private checkout;
+6. dispatch the full controller only when every preflight stage passes.
+
+The preflight exposes only PASS/FAIL state and exact SHA equality in the carrier job summary. It does not expose token material, private source, Git history, or command output.
+
 The request driver validates the carrier against public `main`, then dispatches `.github/workflows/tradeos-public-exact-head.yml` on public `main`. The carrier cannot modify the controller used for its own run and cannot weaken profile contracts. A later private commit invalidates the exact-head evidence.
 
 ## Observable evidence linkage
