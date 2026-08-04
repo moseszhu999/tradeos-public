@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-a-opportunity-import-df362465",
+  "privateExactSha": "df362465c689ec67bb75434734ca38d5c7ba86cf",
+  "expectedBaseSha": "7dc002bb6fcdd98729af50454b35bcc870704b47",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-opportunity-import",
+  "expectedChangedFileCount": 11
+}
