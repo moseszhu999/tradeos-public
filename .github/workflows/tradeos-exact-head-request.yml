@@ -2,30 +2,26 @@ name: tradeOS exact-head request driver
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - .github/exact-head-request.json
 
 permissions:
   contents: read
-  actions: write
-  pull-requests: read
+  issues: write
+  pull-requests: write
 
 concurrency:
   group: tradeos-exact-head-request-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
   cancel-in-progress: false
 
 jobs:
-  dispatch:
+  exact-head:
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
       startsWith(github.event.pull_request.head.ref, 'ci/exact-head-request/')
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 120
     steps:
       - name: Check out exact carrier head
         uses: actions/checkout@v4
@@ -40,7 +36,7 @@ jobs:
           node-version: '22'
 
       - name: Verify carrier scope
-        id: scope
+        id: carrier_scope
         shell: bash
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -59,7 +55,7 @@ jobs:
 
       - name: Validate fixed request payload
         id: request
-        if: steps.scope.outputs.status == 'PASS'
+        if: steps.carrier_scope.outputs.status == 'PASS'
         env:
           REQUEST_PATH: .github/exact-head-request.json
         run: node scripts/validate-exact-head-request.mjs
@@ -77,7 +73,7 @@ jobs:
             echo 'status=FAIL' >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Check out exact private commit for preflight
+      - name: Check out exact private commit
         id: private_checkout
         if: steps.credential.outputs.status == 'PASS'
         uses: actions/checkout@v4
@@ -85,94 +81,147 @@ jobs:
           repository: moseszhu999/chaintrace-app
           ref: ${{ steps.request.outputs.privateExactSha }}
           token: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
-          path: private-preflight
+          path: private-repo
           persist-credentials: false
-          fetch-depth: 1
+          fetch-depth: 0
           clean: true
 
-      - name: Verify exact private checkout identity
-        id: private_verify
+      - name: Verify exact private scope
+        id: private_scope
         if: steps.private_checkout.outcome == 'success'
         shell: bash
         env:
-          EXPECTED_PRIVATE_SHA: ${{ steps.request.outputs.privateExactSha }}
+          PRIVATE_REPO_PATH: ${{ github.workspace }}/private-repo
+          PRIVATE_MAIN_REPO_PATH: ${{ github.workspace }}/private-main
+          PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
+          EXPECTED_BASE_SHA: ${{ steps.request.outputs.expectedBaseSha }}
+          EXPECTED_MAIN_SHA: ${{ steps.request.outputs.expectedMainSha }}
+          VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
+          EXPECTED_CHANGED_FILE_COUNT: ${{ steps.request.outputs.expectedChangedFileCount }}
         run: |
-          set -euo pipefail
-          actual_sha="$(git -C private-preflight rev-parse HEAD)"
-          [[ "$actual_sha" == "$EXPECTED_PRIVATE_SHA" ]]
-          echo 'status=PASS' >> "$GITHUB_OUTPUT"
-          echo "actual_sha=$actual_sha" >> "$GITHUB_OUTPUT"
+          set +e
+          node scripts/verify-private-scope.mjs > "$RUNNER_TEMP/tradeos-scope.log" 2>&1
+          echo "runner_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
 
-      - name: Dispatch controller on public main
-        if: steps.private_verify.outputs.status == 'PASS'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'tradeos-public-exact-head.yml',
-              ref: 'main',
-              inputs: {
-                requestId: '${{ steps.request.outputs.requestId }}',
-                carrierPrNumber: '${{ github.event.pull_request.number }}',
-                privateExactSha: '${{ steps.request.outputs.privateExactSha }}',
-                expectedBaseSha: '${{ steps.request.outputs.expectedBaseSha }}',
-                expectedMainSha: '${{ steps.request.outputs.expectedMainSha }}',
-                validationProfile: '${{ steps.request.outputs.validationProfile }}',
-                expectedChangedFileCount: '${{ steps.request.outputs.expectedChangedFileCount }}',
-              },
-            });
+      - name: Run selected fixed profile with sealed output
+        id: profile
+        if: steps.private_scope.outputs.status == 'PASS'
+        shell: bash
+        env:
+          VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
+          PRIVATE_REPO_PATH: ${{ github.workspace }}/private-repo
+        run: |
+          set +e
+          node scripts/run-private-profile.mjs > "$RUNNER_TEMP/tradeos-profile-controller.log" 2>&1
+          echo "runner_code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
 
-      - name: Publish sanitized carrier result
+      - name: Finalize closed verdict
+        id: final
+        if: always()
+        shell: bash
+        env:
+          CARRIER_SCOPE: ${{ steps.carrier_scope.outputs.status }}
+          REQUEST_STATUS: ${{ steps.request.outputs.status }}
+          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
+          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
+          PRIVATE_SCOPE: ${{ steps.private_scope.outputs.status }}
+          PROFILE_STATUS: ${{ steps.profile.outputs.status }}
+          PROFILE_FAILURE_STAGE: ${{ steps.profile.outputs.failure_stage }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          const value = (name) => process.env[name] || 'NOT_RUN';
+          let verdict = 'NOT_RUN';
+          let failureStage = value('PROFILE_FAILURE_STAGE');
+          if (value('CARRIER_SCOPE') !== 'PASS') { verdict = 'FAIL'; failureStage = 'CARRIER_SCOPE'; }
+          else if (value('REQUEST_STATUS') !== 'PASS') { verdict = 'FAIL'; failureStage = 'REQUEST_VALIDATION'; }
+          else if (value('CREDENTIAL_STATUS') !== 'PASS' || value('PRIVATE_CHECKOUT_OUTCOME') !== 'success') { verdict = 'INFRASTRUCTURE_BLOCKED'; failureStage = 'PRIVATE_CHECKOUT'; }
+          else if (value('PRIVATE_SCOPE') !== 'PASS') { verdict = 'FAIL'; failureStage = 'EXACT_SCOPE'; }
+          else if (value('PROFILE_STATUS') === 'PASS') { verdict = 'PASS'; failureStage = 'NONE'; }
+          else if (value('PROFILE_STATUS') === 'FAIL') { verdict = 'FAIL'; }
+          appendFileSync(process.env.GITHUB_OUTPUT, `verdict=${verdict}\nfailure_stage=${failureStage}\n`, 'utf8');
+          NODE
+
+      - name: Publish sanitized exact-head verdict
         if: always()
         shell: bash
         env:
           REQUEST_ID: ${{ steps.request.outputs.requestId }}
           VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
           PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
-          ACTUAL_PRIVATE_SHA: ${{ steps.private_verify.outputs.actual_sha }}
-          REQUEST_STATUS: ${{ steps.request.outputs.status }}
-          SCOPE_STATUS: ${{ steps.scope.outputs.status }}
-          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
-          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
-          PRIVATE_VERIFY_STATUS: ${{ steps.private_verify.outputs.status }}
+          MERGE_BASE: ${{ steps.private_scope.outputs.merge_base }}
+          CHANGED_FILE_COUNT: ${{ steps.private_scope.outputs.changed_file_count }}
+          PASSED_STEPS: ${{ steps.profile.outputs.passed_step_count }}
+          STEP_COUNT: ${{ steps.profile.outputs.step_count }}
+          VERDICT: ${{ steps.final.outputs.verdict }}
+          FAILURE_STAGE: ${{ steps.final.outputs.failure_stage }}
         run: |
           {
-            echo '## tradeOS exact-head request carrier'
+            echo '## tradeOS public exact-head CI'
             echo
             echo "- Request ID: \`${REQUEST_ID:-NOT_RUN}\`"
             echo "- Validation profile: **${VALIDATION_PROFILE:-NOT_RUN}**"
-            echo "- Requested private SHA: \`${PRIVATE_EXACT_SHA:-NOT_RUN}\`"
-            echo "- Checked-out private SHA: \`${ACTUAL_PRIVATE_SHA:-NOT_RUN}\`"
-            echo "- Carrier scope: **${SCOPE_STATUS:-NOT_RUN}**"
-            echo "- Request validation: **${REQUEST_STATUS:-NOT_RUN}**"
-            echo "- Read-only credential: **${CREDENTIAL_STATUS:-NOT_RUN}**"
-            echo "- Exact private checkout: **${PRIVATE_CHECKOUT_OUTCOME:-NOT_RUN}**"
-            echo "- SHA equality: **${PRIVATE_VERIFY_STATUS:-NOT_RUN}**"
+            echo "- Exact private SHA: \`${PRIVATE_EXACT_SHA:-NOT_RUN}\`"
+            echo "- Exact merge base: \`${MERGE_BASE:-NOT_RUN}\`"
+            echo "- Changed files: **${CHANGED_FILE_COUNT:-NOT_RUN}**"
+            echo "- Fixed profile stages: **${PASSED_STEPS:-0}/${STEP_COUNT:-0}**"
+            echo "- Failure stage: **${FAILURE_STAGE:-NOT_RUN}**"
+            echo "- Final verdict: **${VERDICT:-NOT_RUN}**"
             echo
-            echo 'The controller runs from public main and reports its sanitized final verdict back to this carrier PR. The carrier cannot supply commands, weaken profile contracts, upload artifacts, deploy, or write production systems.'
+            echo 'Raw private output remains runner-local and is deleted. No artifact, deployment, production access or write is permitted.'
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Delete private preflight checkout
+      - name: Comment sanitized verdict on carrier
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          REQUEST_ID: ${{ steps.request.outputs.requestId }}
+          VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
+          PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
+          MERGE_BASE: ${{ steps.private_scope.outputs.merge_base }}
+          CHANGED_FILE_COUNT: ${{ steps.private_scope.outputs.changed_file_count }}
+          PASSED_STEPS: ${{ steps.profile.outputs.passed_step_count }}
+          STEP_COUNT: ${{ steps.profile.outputs.step_count }}
+          VERDICT: ${{ steps.final.outputs.verdict }}
+          FAILURE_STAGE: ${{ steps.final.outputs.failure_stage }}
+        with:
+          script: |
+            const v = (name) => process.env[name] || 'NOT_RUN';
+            const body = [
+              '## tradeOS public exact-head CI',
+              '',
+              `- Request ID: \`${v('REQUEST_ID')}\``,
+              `- Validation profile: **${v('VALIDATION_PROFILE')}**`,
+              `- Exact private SHA: \`${v('PRIVATE_EXACT_SHA')}\``,
+              `- Exact merge base: \`${v('MERGE_BASE')}\``,
+              `- Changed files: **${v('CHANGED_FILE_COUNT')}**`,
+              `- Fixed profile stages: **${v('PASSED_STEPS')}/${v('STEP_COUNT')}**`,
+              `- Failure stage: **${v('FAILURE_STAGE')}**`,
+              `- Final verdict: **${v('VERDICT')}**`,
+              '',
+              'Private logs remain sealed and are not uploaded. No deployment or production write was performed.',
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Delete private checkout and sealed logs
         if: always()
         shell: bash
         run: |
-          chmod -R u+rwX private-preflight 2>/dev/null || true
-          rm -rf private-preflight
+          chmod -R u+rwX private-repo 2>/dev/null || true
+          rm -rf private-repo
+          rm -f "$RUNNER_TEMP/tradeos-scope.log" "$RUNNER_TEMP/tradeos-private-profile.log" "$RUNNER_TEMP/tradeos-profile-controller.log"
 
-      - name: Enforce carrier preflight
+      - name: Enforce exact-head verdict
         if: always()
         shell: bash
         env:
-          SCOPE_STATUS: ${{ steps.scope.outputs.status }}
-          REQUEST_STATUS: ${{ steps.request.outputs.status }}
-          CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
-          PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
-          PRIVATE_VERIFY_STATUS: ${{ steps.private_verify.outputs.status }}
+          VERDICT: ${{ steps.final.outputs.verdict }}
         run: |
-          [[ "$SCOPE_STATUS" == 'PASS' ]]
-          [[ "$REQUEST_STATUS" == 'PASS' ]]
-          [[ "$CREDENTIAL_STATUS" == 'PASS' ]]
-          [[ "$PRIVATE_CHECKOUT_OUTCOME" == 'success' ]]
-          [[ "$PRIVATE_VERIFY_STATUS" == 'PASS' ]]
+          [[ "$VERDICT" == 'PASS' ]]
