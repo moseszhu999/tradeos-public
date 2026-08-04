@@ -104,9 +104,35 @@ jobs:
           echo "runner_code=$?" >> "$GITHUB_OUTPUT"
           exit 0
 
+      - name: Bootstrap ephemeral npm lock when absent
+        id: dependency_lock
+        if: steps.private_scope.outputs.status == 'PASS'
+        shell: bash
+        run: |
+          set +e
+          if [[ -f private-repo/package-lock.json || -f private-repo/npm-shrinkwrap.json ]]; then
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+            echo 'mode=existing_npm_lock' >> "$GITHUB_OUTPUT"
+          else
+            (
+              cd private-repo
+              npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+            ) > "$RUNNER_TEMP/tradeos-lock-bootstrap.log" 2>&1
+            code=$?
+            echo "runner_code=$code" >> "$GITHUB_OUTPUT"
+            if [[ "$code" == 0 && -f private-repo/package-lock.json ]]; then
+              echo 'status=PASS' >> "$GITHUB_OUTPUT"
+              echo 'mode=ephemeral_package_lock' >> "$GITHUB_OUTPUT"
+            else
+              echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+              echo 'mode=lock_bootstrap_failed' >> "$GITHUB_OUTPUT"
+            fi
+          fi
+          exit 0
+
       - name: Run selected fixed profile with sealed output
         id: profile
-        if: steps.private_scope.outputs.status == 'PASS'
+        if: steps.dependency_lock.outputs.status == 'PASS'
         shell: bash
         env:
           VALIDATION_PROFILE: ${{ steps.request.outputs.validationProfile }}
@@ -127,6 +153,7 @@ jobs:
           CREDENTIAL_STATUS: ${{ steps.credential.outputs.status }}
           PRIVATE_CHECKOUT_OUTCOME: ${{ steps.private_checkout.outcome }}
           PRIVATE_SCOPE: ${{ steps.private_scope.outputs.status }}
+          DEPENDENCY_LOCK_STATUS: ${{ steps.dependency_lock.outputs.status }}
           PROFILE_STATUS: ${{ steps.profile.outputs.status }}
           PROFILE_FAILURE_STAGE: ${{ steps.profile.outputs.failure_stage }}
         run: |
@@ -139,6 +166,7 @@ jobs:
           else if (value('REQUEST_STATUS') !== 'PASS') { verdict = 'FAIL'; failureStage = 'REQUEST_VALIDATION'; }
           else if (value('CREDENTIAL_STATUS') !== 'PASS' || value('PRIVATE_CHECKOUT_OUTCOME') !== 'success') { verdict = 'INFRASTRUCTURE_BLOCKED'; failureStage = 'PRIVATE_CHECKOUT'; }
           else if (value('PRIVATE_SCOPE') !== 'PASS') { verdict = 'FAIL'; failureStage = 'EXACT_SCOPE'; }
+          else if (value('DEPENDENCY_LOCK_STATUS') !== 'PASS') { verdict = 'INFRASTRUCTURE_BLOCKED'; failureStage = 'DEPENDENCY_LOCK_BOOTSTRAP'; }
           else if (value('PROFILE_STATUS') === 'PASS') { verdict = 'PASS'; failureStage = 'NONE'; }
           else if (value('PROFILE_STATUS') === 'FAIL') { verdict = 'FAIL'; }
           appendFileSync(process.env.GITHUB_OUTPUT, `verdict=${verdict}\nfailure_stage=${failureStage}\n`, 'utf8');
@@ -153,6 +181,7 @@ jobs:
           PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
           MERGE_BASE: ${{ steps.private_scope.outputs.merge_base }}
           CHANGED_FILE_COUNT: ${{ steps.private_scope.outputs.changed_file_count }}
+          DEPENDENCY_LOCK_MODE: ${{ steps.dependency_lock.outputs.mode }}
           PASSED_STEPS: ${{ steps.profile.outputs.passed_step_count }}
           STEP_COUNT: ${{ steps.profile.outputs.step_count }}
           VERDICT: ${{ steps.final.outputs.verdict }}
@@ -166,6 +195,7 @@ jobs:
             echo "- Exact private SHA: \`${PRIVATE_EXACT_SHA:-NOT_RUN}\`"
             echo "- Exact merge base: \`${MERGE_BASE:-NOT_RUN}\`"
             echo "- Changed files: **${CHANGED_FILE_COUNT:-NOT_RUN}**"
+            echo "- Dependency lock mode: **${DEPENDENCY_LOCK_MODE:-NOT_RUN}**"
             echo "- Fixed profile stages: **${PASSED_STEPS:-0}/${STEP_COUNT:-0}**"
             echo "- Failure stage: **${FAILURE_STAGE:-NOT_RUN}**"
             echo "- Final verdict: **${VERDICT:-NOT_RUN}**"
@@ -182,6 +212,7 @@ jobs:
           PRIVATE_EXACT_SHA: ${{ steps.request.outputs.privateExactSha }}
           MERGE_BASE: ${{ steps.private_scope.outputs.merge_base }}
           CHANGED_FILE_COUNT: ${{ steps.private_scope.outputs.changed_file_count }}
+          DEPENDENCY_LOCK_MODE: ${{ steps.dependency_lock.outputs.mode }}
           PASSED_STEPS: ${{ steps.profile.outputs.passed_step_count }}
           STEP_COUNT: ${{ steps.profile.outputs.step_count }}
           VERDICT: ${{ steps.final.outputs.verdict }}
@@ -197,6 +228,7 @@ jobs:
               `- Exact private SHA: \`${v('PRIVATE_EXACT_SHA')}\``,
               `- Exact merge base: \`${v('MERGE_BASE')}\``,
               `- Changed files: **${v('CHANGED_FILE_COUNT')}**`,
+              `- Dependency lock mode: **${v('DEPENDENCY_LOCK_MODE')}**`,
               `- Fixed profile stages: **${v('PASSED_STEPS')}/${v('STEP_COUNT')}**`,
               `- Failure stage: **${v('FAILURE_STAGE')}**`,
               `- Final verdict: **${v('VERDICT')}**`,
@@ -216,7 +248,7 @@ jobs:
         run: |
           chmod -R u+rwX private-repo 2>/dev/null || true
           rm -rf private-repo
-          rm -f "$RUNNER_TEMP/tradeos-scope.log" "$RUNNER_TEMP/tradeos-private-profile.log" "$RUNNER_TEMP/tradeos-profile-controller.log"
+          rm -f "$RUNNER_TEMP/tradeos-scope.log" "$RUNNER_TEMP/tradeos-lock-bootstrap.log" "$RUNNER_TEMP/tradeos-private-profile.log" "$RUNNER_TEMP/tradeos-profile-controller.log"
 
       - name: Enforce exact-head verdict
         if: always()
