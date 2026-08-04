@@ -9,6 +9,17 @@ const typecheck = ['npm', ['run', 'typecheck']];
 const build = ['npm', ['run', 'build']];
 const contractsCompile = ['npm', ['run', 'contracts:compile']];
 const contractsTest = ['npm', ['run', 'contracts:test']];
+const opportunityImportFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-opportunity-import-core.test.ts',
+  'tests/trade-public-market-opportunity-import-validation.test.ts',
+]];
+const explainableMatchFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-market-match-core.test.ts',
+]];
 
 const CORE_FILES = Object.freeze([
   'app/api/integrations/agents/mcp/route.ts',
@@ -67,12 +78,37 @@ const WORKBUDDY_EVIDENCE = Object.freeze({
   ],
 });
 
+const OPPORTUNITY_IMPORT_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/opportunity-import/index.ts',
+    'tests/trade-public-market-opportunity-import-core.test.ts',
+    'tests/trade-public-market-opportunity-import-validation.test.ts',
+  ],
+  filePatterns: [],
+});
+
+const EXPLAINABLE_MATCH_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/market-match/index.ts',
+    'tests/trade-public-market-market-match-core.test.ts',
+  ],
+  filePatterns: [],
+});
+
 const CORE_EVIDENCE = Object.freeze({ requiredFiles: CORE_FILES, filePatterns: CORE_PATTERNS });
 
 export const PROFILE_DEFINITIONS = Object.freeze({
   'bounded-runtime': {
     evidence: null,
     commands: [install, unit, typecheck],
+  },
+  'public-market-opportunity-import': {
+    evidence: OPPORTUNITY_IMPORT_EVIDENCE,
+    commands: [install, opportunityImportFocused, typecheck, build],
+  },
+  'public-market-explainable-match': {
+    evidence: EXPLAINABLE_MATCH_EVIDENCE,
+    commands: [install, explainableMatchFocused, typecheck, build],
   },
   'agent-client-contract': {
     evidence: CORE_EVIDENCE,

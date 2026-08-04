@@ -5,6 +5,8 @@ const SHA = /^[0-9a-f]{40}$/;
 const REQUEST_ID = /^[a-z0-9][a-z0-9-]{7,79}$/;
 const PROFILES = new Set([
   'bounded-runtime',
+  'public-market-opportunity-import',
+  'public-market-explainable-match',
   'agent-client-contract',
   'codex-integration',
   'workbuddy-integration',
