@@ -8,6 +8,7 @@ const PROFILES = new Set([
   'public-market-opportunity-import',
   'public-market-explainable-match',
   'public-market-retention-participation',
+  'neon-business-authorization-foundation',
   'agent-client-contract',
   'codex-integration',
   'workbuddy-integration',
