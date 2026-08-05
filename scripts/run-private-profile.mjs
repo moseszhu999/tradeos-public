@@ -20,6 +20,14 @@ const explainableMatchFocused = ['npm', [
   '--',
   'tests/trade-public-market-market-match-core.test.ts',
 ]];
+const retentionParticipationFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-retention-runtime.test.ts',
+  'tests/trade-public-market-retention-from-match.test.ts',
+  'tests/trade-public-market-retention-from-opportunity.test.ts',
+  'tests/trade-public-market-claim-invite-intents.test.ts',
+]];
 
 const CORE_FILES = Object.freeze([
   'app/api/integrations/agents/mcp/route.ts',
@@ -95,6 +103,20 @@ const EXPLAINABLE_MATCH_EVIDENCE = Object.freeze({
   filePatterns: [],
 });
 
+const RETENTION_PARTICIPATION_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/retention/index.ts',
+    'lib/trade-public-market/retention/from-match.ts',
+    'lib/trade-public-market/retention/from-opportunity.ts',
+    'lib/trade-public-market/retention/claim-invite.ts',
+    'tests/trade-public-market-retention-runtime.test.ts',
+    'tests/trade-public-market-retention-from-match.test.ts',
+    'tests/trade-public-market-retention-from-opportunity.test.ts',
+    'tests/trade-public-market-claim-invite-intents.test.ts',
+  ],
+  filePatterns: [],
+});
+
 const CORE_EVIDENCE = Object.freeze({ requiredFiles: CORE_FILES, filePatterns: CORE_PATTERNS });
 
 export const PROFILE_DEFINITIONS = Object.freeze({
@@ -109,6 +131,10 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   'public-market-explainable-match': {
     evidence: EXPLAINABLE_MATCH_EVIDENCE,
     commands: [install, explainableMatchFocused, typecheck, build],
+  },
+  'public-market-retention-participation': {
+    evidence: RETENTION_PARTICIPATION_EVIDENCE,
+    commands: [install, retentionParticipationFocused, typecheck, build],
   },
   'agent-client-contract': {
     evidence: CORE_EVIDENCE,
