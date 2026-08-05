@@ -1,8 +1,8 @@
 {
-  "requestId": "m1-retention-current-main-9d72b16",
+  "requestId": "m1-retention-current-main-9d72b16-r2",
   "privateExactSha": "9d72b16d96cf6dacfa199a6c540a62aafaa95778",
   "expectedBaseSha": "46bf8ae326ac56df262b499ab4a4f55b45674cc1",
-  "expectedMainSha": "46bf8ae326ac56df262b499ab4a4f55b45674cc1",
+  "expectedMainSha": "",
   "validationProfile": "public-market-retention-participation",
   "expectedChangedFileCount": 9
 }
