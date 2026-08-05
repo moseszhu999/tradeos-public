@@ -12,6 +12,17 @@ const request = {
   expectedChangedFileCount: 4,
 };
 
+const surfaceTitles = [
+  'creates one deterministic privacy-safe object route for every Founder Opportunity case',
+  'uses the existing Opportunity Import digest and canonical ted-eu provenance',
+  'keeps excluded founder research and supplier evidence out of the public read model and share reference',
+  'fails closed when the share version does not match the canonical object digest',
+  'resolves only known object IDs',
+  'prepares an organization-private Save object without persistence or canonical writes',
+  'uses the canonical auth organization reader and hides Save when context is unavailable',
+  'links the existing Founder Opportunity Cockpit to the canonical Retention share paths',
+];
+
 test('accepts only the fixed Retention participation profile name', () => {
   assert.equal(
     validateExactHeadRequest(request).validationProfile,
@@ -23,7 +34,7 @@ test('accepts only the fixed Retention participation profile name', () => {
   }));
 });
 
-test('fixes Retention plus Public Market surface evidence and focused tests before typecheck and build', () => {
+test('fixes Retention core and each Public Market surface contract before typecheck and build', () => {
   const profile = PROFILE_DEFINITIONS['public-market-retention-participation'];
   assert.deepEqual(profile.evidence.requiredFiles, [
     'lib/trade-public-market/retention/index.ts',
@@ -48,8 +59,14 @@ test('fixes Retention plus Public Market surface evidence and focused tests befo
       'tests/trade-public-market-retention-from-match.test.ts',
       'tests/trade-public-market-retention-from-opportunity.test.ts',
       'tests/trade-public-market-claim-invite-intents.test.ts',
-      'tests/trade-public-market-product-surface.test.ts',
     ]],
+    ...surfaceTitles.map((title) => ['npm', [
+      'test',
+      '--',
+      'tests/trade-public-market-product-surface.test.ts',
+      '-t',
+      title,
+    ]]),
     ['npm', ['run', 'typecheck']],
     ['npm', ['run', 'build']],
   ]);
