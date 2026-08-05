@@ -28,8 +28,19 @@ const retentionParticipationFocused = ['npm', [
   'tests/trade-public-market-retention-from-match.test.ts',
   'tests/trade-public-market-retention-from-opportunity.test.ts',
   'tests/trade-public-market-claim-invite-intents.test.ts',
-  'tests/trade-public-market-product-surface.test.ts',
 ]];
+
+const PUBLIC_MARKET_SURFACE_TEST_FILE = 'tests/trade-public-market-product-surface.test.ts';
+const publicMarketSurfaceContractChecks = [
+  'creates one deterministic privacy-safe object route for every Founder Opportunity case',
+  'uses the existing Opportunity Import digest and canonical ted-eu provenance',
+  'keeps excluded founder research and supplier evidence out of the public read model and share reference',
+  'fails closed when the share version does not match the canonical object digest',
+  'resolves only known object IDs',
+  'prepares an organization-private Save object without persistence or canonical writes',
+  'uses the canonical auth organization reader and hides Save when context is unavailable',
+  'links the existing Founder Opportunity Cockpit to the canonical Retention share paths',
+].map((title) => ['npm', ['test', '--', PUBLIC_MARKET_SURFACE_TEST_FILE, '-t', title]]);
 
 const NEON_AUTHORIZATION_TEST_FILE = 'tests/trade-neon-business-authorization-foundation.test.ts';
 const neonAuthorizationContractChecks = [
@@ -131,7 +142,7 @@ const RETENTION_PARTICIPATION_EVIDENCE = Object.freeze({
     'tests/trade-public-market-retention-from-match.test.ts',
     'tests/trade-public-market-retention-from-opportunity.test.ts',
     'tests/trade-public-market-claim-invite-intents.test.ts',
-    'tests/trade-public-market-product-surface.test.ts',
+    PUBLIC_MARKET_SURFACE_TEST_FILE,
   ],
   filePatterns: [],
 });
@@ -164,7 +175,7 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   },
   'public-market-retention-participation': {
     evidence: RETENTION_PARTICIPATION_EVIDENCE,
-    commands: [install, retentionParticipationFocused, typecheck, build],
+    commands: [install, retentionParticipationFocused, ...publicMarketSurfaceContractChecks, typecheck, build],
   },
   'neon-business-authorization-foundation': {
     evidence: NEON_AUTHORIZATION_EVIDENCE,
