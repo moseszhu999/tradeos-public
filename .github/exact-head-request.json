@@ -1,0 +1,8 @@
+{
+  "requestId": "n1-current-main-a520e81",
+  "privateExactSha": "a520e811f877dcc695c9ebea868772e6f0416ea3",
+  "expectedBaseSha": "9c0566bf0a91cf4b9cd7e5a7229a6e9aed6800d0",
+  "expectedMainSha": "",
+  "validationProfile": "neon-business-authorization-foundation",
+  "expectedChangedFileCount": 5
+}
