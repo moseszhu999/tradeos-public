@@ -1,8 +1,8 @@
 {
   "requestId": "public-surface-5ccb61f",
-  "privateRepository": "moseszhu999/chaintrace-app",
-  "privateBaseSha": "5b2065e935b1162ecbc581d8554e80455cee7fbf",
-  "privateHeadSha": "5ccb61fc139ae1e8aa5c2896c25eb13672fc885a",
-  "changedFiles": 4,
-  "validationProfile": "public-market-retention-participation"
+  "privateExactSha": "5ccb61fc139ae1e8aa5c2896c25eb13672fc885a",
+  "expectedBaseSha": "5b2065e935b1162ecbc581d8554e80455cee7fbf",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-retention-participation",
+  "expectedChangedFileCount": 4
 }
