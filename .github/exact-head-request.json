@@ -1,0 +1,8 @@
+{
+  "requestId": "market-review-preview-b7c9fb4",
+  "privateExactSha": "b7c9fb42c5cc92589abdcffbd89905d759174283",
+  "expectedBaseSha": "9c0566bf0a91cf4b9cd7e5a7229a6e9aed6800d0",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-retention-participation",
+  "expectedChangedFileCount": 3
+}
