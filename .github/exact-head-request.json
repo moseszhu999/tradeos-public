@@ -1,0 +1,8 @@
+{
+  "requestId": "tradeproof-adapter-focused-8872c1c",
+  "privateExactSha": "8872c1cb8f4a57561a02e7ab7dcc17d94dd0ba66",
+  "expectedBaseSha": "8d4eac9852c5d10feb01cb31f37b21e0e437e90c",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-opportunity-import",
+  "expectedChangedFileCount": 3
+}
