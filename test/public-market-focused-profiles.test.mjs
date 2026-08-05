@@ -25,12 +25,14 @@ test('accepts only the named Public Market focused profiles through the fixed re
   assert.throws(() => validateExactHeadRequest(request('public-market-custom-command', 1)));
 });
 
-test('Opportunity Import profile fixes evidence, focused tests, typecheck, and build', () => {
+test('Opportunity Import profile fixes core plus TradeProof adapter evidence, focused tests, typecheck, and build', () => {
   const profile = PROFILE_DEFINITIONS['public-market-opportunity-import'];
   assert.deepEqual(profile.evidence.requiredFiles, [
     'lib/trade-public-market/opportunity-import/index.ts',
+    'lib/trade-public-market/opportunity-import/from-tradeproof.ts',
     'tests/trade-public-market-opportunity-import-core.test.ts',
     'tests/trade-public-market-opportunity-import-validation.test.ts',
+    'tests/trade-public-market-tradeproof-opportunity-adapter.test.ts',
   ]);
   assert.deepEqual(profile.commands, [
     ['npm', ['ci', '--no-audit', '--no-fund']],
@@ -39,6 +41,7 @@ test('Opportunity Import profile fixes evidence, focused tests, typecheck, and b
       '--',
       'tests/trade-public-market-opportunity-import-core.test.ts',
       'tests/trade-public-market-opportunity-import-validation.test.ts',
+      'tests/trade-public-market-tradeproof-opportunity-adapter.test.ts',
     ]],
     ['npm', ['run', 'typecheck']],
     ['npm', ['run', 'build']],

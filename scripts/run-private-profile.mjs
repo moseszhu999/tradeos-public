@@ -14,6 +14,7 @@ const opportunityImportFocused = ['npm', [
   '--',
   'tests/trade-public-market-opportunity-import-core.test.ts',
   'tests/trade-public-market-opportunity-import-validation.test.ts',
+  'tests/trade-public-market-tradeproof-opportunity-adapter.test.ts',
 ]];
 const explainableMatchFocused = ['npm', [
   'test',
@@ -100,8 +101,10 @@ const WORKBUDDY_EVIDENCE = Object.freeze({
 const OPPORTUNITY_IMPORT_EVIDENCE = Object.freeze({
   requiredFiles: [
     'lib/trade-public-market/opportunity-import/index.ts',
+    'lib/trade-public-market/opportunity-import/from-tradeproof.ts',
     'tests/trade-public-market-opportunity-import-core.test.ts',
     'tests/trade-public-market-opportunity-import-validation.test.ts',
+    'tests/trade-public-market-tradeproof-opportunity-adapter.test.ts',
   ],
   filePatterns: [],
 });
