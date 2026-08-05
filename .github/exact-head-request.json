@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-retention-participation-2ee248b",
+  "privateExactSha": "2ee248b62775afef2502dc9779f3751fe7f6aa2a",
+  "expectedBaseSha": "7dc002bb6fcdd98729af50454b35bcc870704b47",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-retention-participation",
+  "expectedChangedFileCount": 13
+}
