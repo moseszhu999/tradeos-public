@@ -1,0 +1,8 @@
+{
+  "requestId": "surface-audit-opportunity-c47a6b7",
+  "privateExactSha": "c47a6b7c6a34327f8f839e72304b42b6af3fba83",
+  "expectedBaseSha": "754f5ae9f9711a124493594c6c450704816b0590",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-opportunity-import",
+  "expectedChangedFileCount": 2
+}
