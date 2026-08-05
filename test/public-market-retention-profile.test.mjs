@@ -9,7 +9,7 @@ const request = {
   expectedBaseSha: 'b'.repeat(40),
   expectedMainSha: '',
   validationProfile: 'public-market-retention-participation',
-  expectedChangedFileCount: 13,
+  expectedChangedFileCount: 4,
 };
 
 test('accepts only the fixed Retention participation profile name', () => {
@@ -23,17 +23,21 @@ test('accepts only the fixed Retention participation profile name', () => {
   }));
 });
 
-test('fixes Retention evidence and four focused tests before typecheck and build', () => {
+test('fixes Retention plus Public Market surface evidence and focused tests before typecheck and build', () => {
   const profile = PROFILE_DEFINITIONS['public-market-retention-participation'];
   assert.deepEqual(profile.evidence.requiredFiles, [
     'lib/trade-public-market/retention/index.ts',
     'lib/trade-public-market/retention/from-match.ts',
     'lib/trade-public-market/retention/from-opportunity.ts',
     'lib/trade-public-market/retention/claim-invite.ts',
+    'app/market/[kind]/[objectId]/page.tsx',
+    'app/opportunities/page.tsx',
+    'lib/opportunity-products/public-market-surface.ts',
     'tests/trade-public-market-retention-runtime.test.ts',
     'tests/trade-public-market-retention-from-match.test.ts',
     'tests/trade-public-market-retention-from-opportunity.test.ts',
     'tests/trade-public-market-claim-invite-intents.test.ts',
+    'tests/trade-public-market-product-surface.test.ts',
   ]);
   assert.deepEqual(profile.commands, [
     ['npm', ['ci', '--no-audit', '--no-fund']],
@@ -44,6 +48,7 @@ test('fixes Retention evidence and four focused tests before typecheck and build
       'tests/trade-public-market-retention-from-match.test.ts',
       'tests/trade-public-market-retention-from-opportunity.test.ts',
       'tests/trade-public-market-claim-invite-intents.test.ts',
+      'tests/trade-public-market-product-surface.test.ts',
     ]],
     ['npm', ['run', 'typecheck']],
     ['npm', ['run', 'build']],

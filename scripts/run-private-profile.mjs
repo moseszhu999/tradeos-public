@@ -28,6 +28,7 @@ const retentionParticipationFocused = ['npm', [
   'tests/trade-public-market-retention-from-match.test.ts',
   'tests/trade-public-market-retention-from-opportunity.test.ts',
   'tests/trade-public-market-claim-invite-intents.test.ts',
+  'tests/trade-public-market-product-surface.test.ts',
 ]];
 
 const NEON_AUTHORIZATION_TEST_FILE = 'tests/trade-neon-business-authorization-foundation.test.ts';
@@ -123,10 +124,14 @@ const RETENTION_PARTICIPATION_EVIDENCE = Object.freeze({
     'lib/trade-public-market/retention/from-match.ts',
     'lib/trade-public-market/retention/from-opportunity.ts',
     'lib/trade-public-market/retention/claim-invite.ts',
+    'app/market/[kind]/[objectId]/page.tsx',
+    'app/opportunities/page.tsx',
+    'lib/opportunity-products/public-market-surface.ts',
     'tests/trade-public-market-retention-runtime.test.ts',
     'tests/trade-public-market-retention-from-match.test.ts',
     'tests/trade-public-market-retention-from-opportunity.test.ts',
     'tests/trade-public-market-claim-invite-intents.test.ts',
+    'tests/trade-public-market-product-surface.test.ts',
   ],
   filePatterns: [],
 });
