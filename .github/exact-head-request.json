@@ -1,0 +1,8 @@
+{
+  "requestId": "neon-session-boundary-a46ef1b",
+  "privateExactSha": "a46ef1b4fd00a99ebe0bca5a87b2e5d6cd2217c3",
+  "expectedBaseSha": "9c0566bf0a91cf4b9cd7e5a7229a6e9aed6800d0",
+  "expectedMainSha": "",
+  "validationProfile": "bounded-runtime",
+  "expectedChangedFileCount": 3
+}
