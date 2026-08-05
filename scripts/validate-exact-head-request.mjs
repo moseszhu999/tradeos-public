@@ -7,6 +7,7 @@ const PROFILES = new Set([
   'bounded-runtime',
   'public-market-opportunity-import',
   'public-market-explainable-match',
+  'public-market-retention-participation',
   'agent-client-contract',
   'codex-integration',
   'workbuddy-integration',
