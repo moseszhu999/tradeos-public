@@ -28,6 +28,11 @@ const retentionParticipationFocused = ['npm', [
   'tests/trade-public-market-retention-from-opportunity.test.ts',
   'tests/trade-public-market-claim-invite-intents.test.ts',
 ]];
+const neonAuthorizationFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-neon-business-authorization-foundation.test.ts',
+]];
 
 const CORE_FILES = Object.freeze([
   'app/api/integrations/agents/mcp/route.ts',
@@ -117,6 +122,17 @@ const RETENTION_PARTICIPATION_EVIDENCE = Object.freeze({
   filePatterns: [],
 });
 
+const NEON_AUTHORIZATION_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'database/neon/20260804210000_tradeos_business_authorization_foundation.sql',
+    'lib/neon-business/server.ts',
+    'tests/trade-neon-business-authorization-foundation.test.ts',
+    'docs/waterfall/04-testing/tradeos-neon-business-authorization-foundation-v1.md',
+    'docs/waterfall/04-testing/tradeos-current-progress.html',
+  ],
+  filePatterns: [],
+});
+
 const CORE_EVIDENCE = Object.freeze({ requiredFiles: CORE_FILES, filePatterns: CORE_PATTERNS });
 
 export const PROFILE_DEFINITIONS = Object.freeze({
@@ -135,6 +151,10 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   'public-market-retention-participation': {
     evidence: RETENTION_PARTICIPATION_EVIDENCE,
     commands: [install, retentionParticipationFocused, typecheck, build],
+  },
+  'neon-business-authorization-foundation': {
+    evidence: NEON_AUTHORIZATION_EVIDENCE,
+    commands: [install, neonAuthorizationFocused, typecheck, build],
   },
   'agent-client-contract': {
     evidence: CORE_EVIDENCE,
