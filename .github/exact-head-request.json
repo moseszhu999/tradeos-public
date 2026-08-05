@@ -1,0 +1,8 @@
+{
+  "requestId": "public-surface-retention-b5cdb06",
+  "privateExactSha": "b5cdb06eb82bbbd27d8efb80b953a6855ccb2725",
+  "expectedBaseSha": "5b2065e935b1162ecbc581d8554e80455cee7fbf",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-retention-participation",
+  "expectedChangedFileCount": 4
+}
