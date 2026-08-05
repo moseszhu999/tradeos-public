@@ -28,11 +28,17 @@ const retentionParticipationFocused = ['npm', [
   'tests/trade-public-market-retention-from-opportunity.test.ts',
   'tests/trade-public-market-claim-invite-intents.test.ts',
 ]];
-const neonAuthorizationFocused = ['npm', [
-  'test',
-  '--',
-  'tests/trade-neon-business-authorization-foundation.test.ts',
-]];
+
+const NEON_AUTHORIZATION_TEST_FILE = 'tests/trade-neon-business-authorization-foundation.test.ts';
+const neonAuthorizationContractChecks = [
+  'creates only the shared authorization schema and bounded functions',
+  'uses managed Neon Auth claims without an identity or organization mirror',
+  'uses one bounded owner helper without granting managed schemas or tables',
+  'fails closed for missing actor, active organization mismatch and missing membership',
+  'keeps public functions security-invoker and denies public execution',
+  'uses only a caller bearer token and organization context in the server adapter',
+  'does not introduce business objects or irreversible execution authority',
+].map((title) => ['npm', ['test', '--', NEON_AUTHORIZATION_TEST_FILE, '-t', title]]);
 
 const CORE_FILES = Object.freeze([
   'app/api/integrations/agents/mcp/route.ts',
@@ -126,7 +132,7 @@ const NEON_AUTHORIZATION_EVIDENCE = Object.freeze({
   requiredFiles: [
     'database/neon/20260804210000_tradeos_business_authorization_foundation.sql',
     'lib/neon-business/server.ts',
-    'tests/trade-neon-business-authorization-foundation.test.ts',
+    NEON_AUTHORIZATION_TEST_FILE,
     'docs/waterfall/04-testing/tradeos-neon-business-authorization-foundation-v1.md',
     'docs/waterfall/04-testing/tradeos-current-progress.html',
   ],
@@ -154,7 +160,7 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   },
   'neon-business-authorization-foundation': {
     evidence: NEON_AUTHORIZATION_EVIDENCE,
-    commands: [install, neonAuthorizationFocused, typecheck, build],
+    commands: [install, ...neonAuthorizationContractChecks, typecheck, build],
   },
   'agent-client-contract': {
     evidence: CORE_EVIDENCE,
