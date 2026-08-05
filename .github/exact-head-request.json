@@ -1,0 +1,8 @@
+{
+  "requestId": "market-review-preview-3f44428",
+  "privateExactSha": "3f44428810375032fecf4f01025ba4b9aa73c9e0",
+  "expectedBaseSha": "9c0566bf0a91cf4b9cd7e5a7229a6e9aed6800d0",
+  "expectedMainSha": "",
+  "validationProfile": "bounded-runtime",
+  "expectedChangedFileCount": 3
+}
