@@ -1,8 +1,8 @@
 {
-  "requestId": "public-surface-current-main-d2309b2",
+  "requestId": "public-surface-current-main-d2309b2-r2",
   "privateExactSha": "d2309b282fb368bcd06373b01f995a1af6ef2377",
   "expectedBaseSha": "bf697dc22d9586c2d554162d2611ba262403bb77",
-  "expectedMainSha": "bf697dc22d9586c2d554162d2611ba262403bb77",
+  "expectedMainSha": "",
   "validationProfile": "public-market-retention-participation",
   "expectedChangedFileCount": 4
 }
