@@ -1,0 +1,8 @@
+{
+  "requestId": "opportunity-handoff-docs-325913f",
+  "privateExactSha": "325913f3d87923cbce0303a26f921c82d4f3d9eb",
+  "expectedBaseSha": "b2f404c70cd517e6555303bc107c7335eeb8f154",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-opportunity-import",
+  "expectedChangedFileCount": 2
+}
