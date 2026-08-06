@@ -29,6 +29,16 @@ const retentionParticipationFocused = ['npm', [
   'tests/trade-public-market-retention-from-opportunity.test.ts',
   'tests/trade-public-market-claim-invite-intents.test.ts',
 ]];
+const watchSubscribeFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-market-watch-core.test.ts',
+]];
+const evidenceFeedbackFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-evidence-feedback-core.test.ts',
+]];
 
 const PUBLIC_MARKET_SURFACE_TEST_FILE = 'tests/trade-public-market-product-surface.test.ts';
 const publicMarketSurfaceContractChecks = [
@@ -147,6 +157,24 @@ const RETENTION_PARTICIPATION_EVIDENCE = Object.freeze({
   filePatterns: [],
 });
 
+const WATCH_SUBSCRIBE_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/market-watch/index.ts',
+    'tests/trade-public-market-market-watch-core.test.ts',
+    'docs/waterfall/04-testing/m2-public-market-watch-subscribe-core-v1-audit.md',
+  ],
+  filePatterns: [],
+});
+
+const EVIDENCE_FEEDBACK_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/evidence-feedback/index.ts',
+    'tests/trade-public-market-evidence-feedback-core.test.ts',
+    'docs/waterfall/04-testing/public-market-evidence-feedback-core-v1-audit.md',
+  ],
+  filePatterns: [],
+});
+
 const NEON_AUTHORIZATION_EVIDENCE = Object.freeze({
   requiredFiles: [
     'database/neon/20260804210000_tradeos_business_authorization_foundation.sql',
@@ -176,6 +204,14 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   'public-market-retention-participation': {
     evidence: RETENTION_PARTICIPATION_EVIDENCE,
     commands: [install, retentionParticipationFocused, ...publicMarketSurfaceContractChecks, typecheck, build],
+  },
+  'public-market-watch-subscribe': {
+    evidence: WATCH_SUBSCRIBE_EVIDENCE,
+    commands: [install, watchSubscribeFocused, typecheck, build],
+  },
+  'public-market-evidence-feedback': {
+    evidence: EVIDENCE_FEEDBACK_EVIDENCE,
+    commands: [install, evidenceFeedbackFocused, typecheck, build],
   },
   'neon-business-authorization-foundation': {
     evidence: NEON_AUTHORIZATION_EVIDENCE,
