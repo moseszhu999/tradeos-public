@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-world-bank-focused-main-d6aba40",
+  "privateExactSha": "d6aba408d6aadd0803a4463d17eecbe0bb601f53",
+  "expectedBaseSha": "e0966819c0b124d5d306b15dfac426ca29ba3caf",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-world-bank-source",
+  "expectedChangedFileCount": 4
+}
