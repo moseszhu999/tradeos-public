@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-ted-focused-main-c4ed588",
+  "privateExactSha": "c4ed588882aa9d199fbe9761fda25335da49cb49",
+  "expectedBaseSha": "e0966819c0b124d5d306b15dfac426ca29ba3caf",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-ted-source",
+  "expectedChangedFileCount": 5
+}
