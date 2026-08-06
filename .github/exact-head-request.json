@@ -1,0 +1,8 @@
+{
+  "requestId": "n1-session-boundary-1bbac10",
+  "privateExactSha": "1bbac10ea5c30020e432e9c2b926a9ac7d0ba49a",
+  "expectedBaseSha": "24c5329ebdc728142a222acebb5691670976ed9d",
+  "expectedMainSha": "",
+  "validationProfile": "neon-auth-session-boundary",
+  "expectedChangedFileCount": 3
+}
