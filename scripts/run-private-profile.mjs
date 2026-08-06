@@ -193,7 +193,7 @@ const NEON_SESSION_BOUNDARY_EVIDENCE = Object.freeze({
   ],
   filePatterns: [
     ['lib/neon-auth/session.ts', /NeonAuthServerSession/],
-    ['lib/neon-auth/server.ts', /parseNeonAuthServerSession/],
+    ['lib/neon-auth/server.ts', /parseNeonAuthSessionPayload/],
     ['tests/trade-neon-auth-session-boundary.test.ts', /session\.token/],
     ['tests/trade-neon-auth-session-boundary.test.ts', /accessToken/],
   ],
