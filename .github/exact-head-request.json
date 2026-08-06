@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-registry-focused-ddd66c6",
+  "privateExactSha": "ddd66c68b4aef11ab9b5a3135740acd8feaf0ad2",
+  "expectedBaseSha": "e0966819c0b124d5d306b15dfac426ca29ba3caf",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-source-registry",
+  "expectedChangedFileCount": 3
+}
