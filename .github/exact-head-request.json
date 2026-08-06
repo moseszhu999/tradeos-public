@@ -1,0 +1,8 @@
+{
+  "requestId": "main-90818ed-web-product-baseline",
+  "privateExactSha": "90818ed8215b9e5d5d5a88587364bb6f14a84cbf",
+  "expectedBaseSha": "90818ed8215b9e5d5d5a88587364bb6f14a84cbf",
+  "expectedMainSha": "",
+  "validationProfile": "web-product",
+  "expectedChangedFileCount": 0
+}
