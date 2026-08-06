@@ -205,7 +205,7 @@ const MANAGED_JWT_PRODUCER_EVIDENCE = Object.freeze({
     'lib/neon-auth/managed-data-api-jwt.ts',
     'lib/neon-auth/managed-data-api-jwt-claims.ts',
     'tests/trade-neon-auth-managed-data-api-jwt.test.ts',
-    'docs/waterfall/04-testing/n1-managed-data-api-jwt-producer-v1-audit.md',
+    'docs/waterfall/04-testing/n1-managed-data-api-jwt-producer-current-main-v2-audit.md',
   ],
   filePatterns: [
     ['package.json', /"@neondatabase\/auth":\s*"0\.4\.2-beta"/],
