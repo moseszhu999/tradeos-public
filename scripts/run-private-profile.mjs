@@ -244,8 +244,8 @@ const SOURCE_REGISTRY_EVIDENCE = Object.freeze({
   ],
   filePatterns: [
     ['lib/trade-public-market/source-registry/index.ts', /sourceRegistryId:\s*"ted-eu"/],
-    ['lib/trade-public-market/source-registry/index.ts', /persistencePerformed:\s*false/],
-    ['lib/trade-public-market/source-registry/index.ts', /contactDataImportAllowed:\s*false/],
+    ['lib/trade-public-market/source-registry/index.ts', /persistenceAuthorized:\s*false/],
+    ['lib/trade-public-market/source-registry/index.ts', /contactValuesImportAllowed:\s*false/],
   ],
 });
 
