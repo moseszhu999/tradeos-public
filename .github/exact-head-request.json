@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-sanitization-focused-main-1d050fa",
+  "privateExactSha": "1d050fadd409961a8b2f2952ed47d2f6121fb69d",
+  "expectedBaseSha": "e0966819c0b124d5d306b15dfac426ca29ba3caf",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-source-sanitization",
+  "expectedChangedFileCount": 3
+}
