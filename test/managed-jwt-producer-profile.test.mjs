@@ -31,7 +31,7 @@ test('fixes official SDK evidence, focused test, typecheck and build', () => {
     'lib/neon-auth/managed-data-api-jwt.ts',
     'lib/neon-auth/managed-data-api-jwt-claims.ts',
     'tests/trade-neon-auth-managed-data-api-jwt.test.ts',
-    'docs/waterfall/04-testing/n1-managed-data-api-jwt-producer-v1-audit.md',
+    'docs/waterfall/04-testing/n1-managed-data-api-jwt-producer-current-main-v2-audit.md',
   ]);
   assert.deepEqual(profile.commands, [
     ['npm', ['ci', '--no-audit', '--no-fund']],
