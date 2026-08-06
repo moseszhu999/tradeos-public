@@ -39,6 +39,11 @@ const evidenceFeedbackFocused = ['npm', [
   '--',
   'tests/trade-public-market-evidence-feedback-core.test.ts',
 ]];
+const managedJwtProducerFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-neon-auth-managed-data-api-jwt.test.ts',
+]];
 
 const PUBLIC_MARKET_SURFACE_TEST_FILE = 'tests/trade-public-market-product-surface.test.ts';
 const publicMarketSurfaceContractChecks = [
@@ -175,6 +180,22 @@ const EVIDENCE_FEEDBACK_EVIDENCE = Object.freeze({
   filePatterns: [],
 });
 
+const MANAGED_JWT_PRODUCER_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'package.json',
+    'lib/neon-auth/managed-data-api-jwt.ts',
+    'lib/neon-auth/managed-data-api-jwt-claims.ts',
+    'tests/trade-neon-auth-managed-data-api-jwt.test.ts',
+    'docs/waterfall/04-testing/n1-managed-data-api-jwt-producer-v1-audit.md',
+  ],
+  filePatterns: [
+    ['package.json', /"@neondatabase\/auth":\s*"0\.4\.2-beta"/],
+    ['lib/neon-auth/managed-data-api-jwt.ts', /createNeonAuth/],
+    ['lib/neon-auth/managed-data-api-jwt.ts', /\.token\(\)/],
+    ['lib/neon-auth/managed-data-api-jwt.ts', /official_neon_auth_token_endpoint/],
+  ],
+});
+
 const NEON_AUTHORIZATION_EVIDENCE = Object.freeze({
   requiredFiles: [
     'database/neon/20260804210000_tradeos_business_authorization_foundation.sql',
@@ -212,6 +233,10 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   'public-market-evidence-feedback': {
     evidence: EVIDENCE_FEEDBACK_EVIDENCE,
     commands: [install, evidenceFeedbackFocused, typecheck, build],
+  },
+  'neon-managed-data-api-jwt-producer': {
+    evidence: MANAGED_JWT_PRODUCER_EVIDENCE,
+    commands: [install, managedJwtProducerFocused, typecheck, build],
   },
   'neon-business-authorization-foundation': {
     evidence: NEON_AUTHORIZATION_EVIDENCE,
