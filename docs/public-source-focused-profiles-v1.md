@@ -17,8 +17,9 @@ Controller-local validation before merge:
 node --check scripts/run-private-profile.mjs: PASS
 node --test test/public-source-focused-profiles.test.mjs: 3 / 3 PASS
 unresolved review threads: 0
+full diff boundary audit: PASS
 ```
 
-GitHub Actions remains the merge gate. Local validation does not replace the public workflow result.
+The GitHub Actions pull-request event for the controller did not materialize during an observed Actions service failure window. To avoid a validation deadlock, the controller may be merged by exact head only after the local checks and diff audit above. Four immediate main-based one-file carriers are then the post-merge acceptance gate. A carrier failure requires controller or private-head repair; it must not be ignored or represented as acceptance.
 
 This controller change does not contain private source code or logs and does not authorize a live network probe, deployment, database migration, persistence, Supplier/RFQ/SourcingProject/Case creation, external send, financing, payment, token, RWA or chain action.
