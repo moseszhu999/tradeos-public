@@ -1,0 +1,8 @@
+{
+  "requestId": "n1-managed-jwt-219db03",
+  "privateExactSha": "219db0314bd3692643fff08b0f69c165bdd692e1",
+  "expectedBaseSha": "24c5329ebdc728142a222acebb5691670976ed9d",
+  "expectedMainSha": "",
+  "validationProfile": "neon-managed-data-api-jwt-producer",
+  "expectedChangedFileCount": 5
+}
