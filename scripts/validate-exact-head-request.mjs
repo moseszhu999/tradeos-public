@@ -10,6 +10,7 @@ const PROFILES = new Set([
   'public-market-retention-participation',
   'public-market-watch-subscribe',
   'public-market-evidence-feedback',
+  'neon-auth-session-boundary',
   'neon-managed-data-api-jwt-producer',
   'neon-business-authorization-foundation',
   'agent-client-contract',
