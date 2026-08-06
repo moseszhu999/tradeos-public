@@ -39,6 +39,11 @@ const evidenceFeedbackFocused = ['npm', [
   '--',
   'tests/trade-public-market-evidence-feedback-core.test.ts',
 ]];
+const neonSessionBoundaryFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-neon-auth-session-boundary.test.ts',
+]];
 const managedJwtProducerFocused = ['npm', [
   'test',
   '--',
@@ -180,6 +185,20 @@ const EVIDENCE_FEEDBACK_EVIDENCE = Object.freeze({
   filePatterns: [],
 });
 
+const NEON_SESSION_BOUNDARY_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/neon-auth/server.ts',
+    'lib/neon-auth/session.ts',
+    'tests/trade-neon-auth-session-boundary.test.ts',
+  ],
+  filePatterns: [
+    ['lib/neon-auth/session.ts', /NeonAuthServerSession/],
+    ['lib/neon-auth/server.ts', /parseNeonAuthServerSession/],
+    ['tests/trade-neon-auth-session-boundary.test.ts', /session\.token/],
+    ['tests/trade-neon-auth-session-boundary.test.ts', /accessToken/],
+  ],
+});
+
 const MANAGED_JWT_PRODUCER_EVIDENCE = Object.freeze({
   requiredFiles: [
     'package.json',
@@ -233,6 +252,10 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   'public-market-evidence-feedback': {
     evidence: EVIDENCE_FEEDBACK_EVIDENCE,
     commands: [install, evidenceFeedbackFocused, typecheck, build],
+  },
+  'neon-auth-session-boundary': {
+    evidence: NEON_SESSION_BOUNDARY_EVIDENCE,
+    commands: [install, neonSessionBoundaryFocused, typecheck, build],
   },
   'neon-managed-data-api-jwt-producer': {
     evidence: MANAGED_JWT_PRODUCER_EVIDENCE,
