@@ -39,6 +39,28 @@ const evidenceFeedbackFocused = ['npm', [
   '--',
   'tests/trade-public-market-evidence-feedback-core.test.ts',
 ]];
+const tedSourceFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-ted-search-api-source-adapter.test.ts',
+]];
+const worldBankSourceFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-world-bank-procurement-source-adapter.test.ts',
+]];
+const sourceRegistryFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-source-registry.test.ts',
+]];
+const sourceSanitizationFocused = ['npm', [
+  'test',
+  '--',
+  'tests/trade-public-market-source-sanitization.test.ts',
+]];
+const tedCollectorSyntax = ['node', ['--check', 'scripts/tradeos-ted-search-opportunities.mjs']];
+const worldBankCollectorSyntax = ['node', ['--check', 'scripts/tradeos-world-bank-procurement-opportunities.mjs']];
 const neonSessionBoundaryFocused = ['npm', [
   'test',
   '--',
@@ -185,6 +207,61 @@ const EVIDENCE_FEEDBACK_EVIDENCE = Object.freeze({
   filePatterns: [],
 });
 
+const TED_SOURCE_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/opportunity-import/from-ted-search-api.ts',
+    'lib/trade-public-market/opportunity-import/index.ts',
+    'tests/trade-public-market-ted-search-api-source-adapter.test.ts',
+    'scripts/tradeos-ted-search-opportunities.mjs',
+    'docs/waterfall/04-testing/m1-ted-search-api-source-adapter-v1-audit.md',
+  ],
+  filePatterns: [
+    ['lib/trade-public-market/opportunity-import/from-ted-search-api.ts', /https:\/\/api\.ted\.europa\.eu\/v3\/notices\/search/],
+    ['lib/trade-public-market/opportunity-import/from-ted-search-api.ts', /public-opportunity-import\/v1/],
+    ['scripts/tradeos-ted-search-opportunities.mjs', /persistencePerformed:\s*false/],
+  ],
+});
+
+const WORLD_BANK_SOURCE_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/opportunity-import/from-world-bank-procurement.ts',
+    'tests/trade-public-market-world-bank-procurement-source-adapter.test.ts',
+    'scripts/tradeos-world-bank-procurement-opportunities.mjs',
+    'docs/waterfall/04-testing/m1-world-bank-procurement-source-adapter-v1-audit.md',
+  ],
+  filePatterns: [
+    ['lib/trade-public-market/opportunity-import/from-world-bank-procurement.ts', /https:\/\/search\.worldbank\.org\/api\/v2\/procnotices/],
+    ['lib/trade-public-market/opportunity-import/from-world-bank-procurement.ts', /contact_email/],
+    ['tests/trade-public-market-world-bank-procurement-source-adapter.test.ts', /not\.toContain\("private@example\.test"\)/],
+  ],
+});
+
+const SOURCE_REGISTRY_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/source-registry/index.ts',
+    'tests/trade-public-market-source-registry.test.ts',
+    'docs/waterfall/04-testing/m1-public-market-source-registry-v1-audit.md',
+  ],
+  filePatterns: [
+    ['lib/trade-public-market/source-registry/index.ts', /sourceRegistryId:\s*"ted-eu"/],
+    ['lib/trade-public-market/source-registry/index.ts', /persistenceAuthorized:\s*false/],
+    ['lib/trade-public-market/source-registry/index.ts', /contactValuesImportAllowed:\s*false/],
+  ],
+});
+
+const SOURCE_SANITIZATION_EVIDENCE = Object.freeze({
+  requiredFiles: [
+    'lib/trade-public-market/source-sanitization/index.ts',
+    'tests/trade-public-market-source-sanitization.test.ts',
+    'docs/waterfall/04-testing/m1-public-source-sanitization-core-v1-audit.md',
+  ],
+  filePatterns: [
+    ['lib/trade-public-market/source-sanitization/index.ts', /personal_data/],
+    ['lib/trade-public-market/source-sanitization/index.ts', /policy_excluded/],
+    ['lib/trade-public-market/source-sanitization/index.ts', /persistencePerformed:\s*false/],
+  ],
+});
+
 const NEON_SESSION_BOUNDARY_EVIDENCE = Object.freeze({
   requiredFiles: [
     'lib/neon-auth/server.ts',
@@ -252,6 +329,22 @@ export const PROFILE_DEFINITIONS = Object.freeze({
   'public-market-evidence-feedback': {
     evidence: EVIDENCE_FEEDBACK_EVIDENCE,
     commands: [install, evidenceFeedbackFocused, typecheck, build],
+  },
+  'public-market-ted-source': {
+    evidence: TED_SOURCE_EVIDENCE,
+    commands: [install, tedCollectorSyntax, tedSourceFocused, typecheck, build],
+  },
+  'public-market-world-bank-source': {
+    evidence: WORLD_BANK_SOURCE_EVIDENCE,
+    commands: [install, worldBankCollectorSyntax, worldBankSourceFocused, typecheck, build],
+  },
+  'public-market-source-registry': {
+    evidence: SOURCE_REGISTRY_EVIDENCE,
+    commands: [install, sourceRegistryFocused, typecheck, build],
+  },
+  'public-market-source-sanitization': {
+    evidence: SOURCE_SANITIZATION_EVIDENCE,
+    commands: [install, sourceSanitizationFocused, typecheck, build],
   },
   'neon-auth-session-boundary': {
     evidence: NEON_SESSION_BOUNDARY_EVIDENCE,
@@ -323,8 +416,8 @@ function verifyEvidenceSet(repoPath, evidence) {
       failures.push(`MISSING_PATTERN_FILE:${relativePath}`);
       continue;
     }
-    const content = readFileSync(absolutePath, 'utf8');
-    if (!pattern.test(content)) failures.push(`MISSING_PATTERN:${relativePath}:${pattern.source}`);
+    const fileContent = readFileSync(absolutePath, 'utf8');
+    if (!pattern.test(fileContent)) failures.push(`MISSING_PATTERN:${relativePath}:${pattern.source}`);
   }
 
   if (evidence.anyOf?.length) {
