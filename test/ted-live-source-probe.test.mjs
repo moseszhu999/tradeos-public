@@ -7,16 +7,17 @@ import {
   TED_LIVE_LIMIT,
   TED_LIVE_PRIVATE_EXACT_SHA,
   TED_LIVE_QUERY,
+  TED_LIVE_SCOPE,
   runTedLiveProbe,
   summarizeTedRows,
   validateTedLiveRequest,
 } from '../scripts/ted-live-source-probe.mjs';
 
-test('locks the fixed TED endpoint, query, field allowlist and tiny limit', () => {
+test('locks the fixed TED endpoint, known notice query, ALL scope and minimal field allowlist', () => {
   assert.equal(TED_LIVE_ENDPOINT, 'https://api.ted.europa.eu/v3/notices/search');
-  assert.equal(TED_LIVE_QUERY, 'notice-type = cn-standard');
-  assert.equal(TED_LIVE_LIMIT, 3);
-  assert.ok(TED_LIVE_LIMIT <= 3);
+  assert.equal(TED_LIVE_QUERY, 'publication-number = 151703-2026');
+  assert.equal(TED_LIVE_SCOPE, 'ALL');
+  assert.equal(TED_LIVE_LIMIT, 1);
   assert.equal(TED_LIVE_PRIVATE_EXACT_SHA, '11be8e46041a8e18b7dd4cda616673c0697504b0');
   assert.deepEqual(TED_LIVE_FIELDS, [
     'publication-number',
@@ -50,7 +51,7 @@ test('accepts only a tiny non-executable request that pins the private exact hea
 
 test('summarizes field names and counts without copying source values', () => {
   const rows = [{
-    'publication-number': '123456-2026',
+    'publication-number': '151703-2026',
     'notice-title': { eng: 'Do not expose this title' },
     'buyer-name': { eng: 'Do not expose this buyer' },
     'buyer-email': 'private@example.test',
@@ -79,7 +80,7 @@ test('sends one fixed POST and emits only the sanitized verdict contract', async
       async json() {
         return {
           notices: [{
-            'publication-number': '123456-2026',
+            'publication-number': '151703-2026',
             'notice-title': { eng: 'Sensitive-ish public title not needed in verdict' },
             'buyer-name': { eng: 'Public buyer name not needed in verdict' },
             'notice-type': 'cn-standard',
@@ -98,11 +99,13 @@ test('sends one fixed POST and emits only the sanitized verdict contract', async
   assert.equal(capturedInit.method, 'POST');
   const wire = JSON.parse(capturedInit.body);
   assert.deepEqual(Object.keys(wire).sort(), [
-    'checkQuerySyntax', 'fields', 'limit', 'page', 'paginationMode', 'query',
+    'checkQuerySyntax', 'fields', 'limit', 'page', 'paginationMode', 'query', 'scope',
   ]);
   assert.equal(wire.query, TED_LIVE_QUERY);
-  assert.equal(wire.limit, 3);
+  assert.equal(wire.scope, 'ALL');
+  assert.equal(wire.limit, 1);
   assert.equal(result.verdict, 'PASS');
+  assert.equal(result.scope, 'ALL');
   assert.equal(result.contactValuesCopied, false);
   assert.equal(result.rawRowsLogged, false);
   assert.equal(result.rawPayloadPersisted, false);
