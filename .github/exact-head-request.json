@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-ted-retrieval-d52c3d4",
+  "privateExactSha": "d52c3d48dfd42cf6037a81088349e8e691705d8c",
+  "expectedBaseSha": "438dc4317b788908971656303d0f0da8b2247e1e",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-ted-source",
+  "expectedChangedFileCount": 5
+}
