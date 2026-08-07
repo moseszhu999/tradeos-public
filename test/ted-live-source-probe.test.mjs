@@ -18,7 +18,7 @@ test('locks the fixed TED endpoint, known notice query, ALL scope and minimal fi
   assert.equal(TED_LIVE_QUERY, 'publication-number = 151703-2026');
   assert.equal(TED_LIVE_SCOPE, 'ALL');
   assert.equal(TED_LIVE_LIMIT, 1);
-  assert.equal(TED_LIVE_PRIVATE_EXACT_SHA, '11be8e46041a8e18b7dd4cda616673c0697504b0');
+  assert.equal(TED_LIVE_PRIVATE_EXACT_SHA, 'd52c3d48dfd42cf6037a81088349e8e691705d8c');
   assert.deepEqual(TED_LIVE_FIELDS, [
     'publication-number',
     'notice-title',
@@ -34,16 +34,16 @@ test('locks the fixed TED endpoint, known notice query, ALL scope and minimal fi
 
 test('accepts only a tiny non-executable request that pins the private exact head', () => {
   const request = validateTedLiveRequest({
-    requestId: 'ted-live-11be8e4',
+    requestId: 'ted-live-d52c3d4',
     privateExactSha: TED_LIVE_PRIVATE_EXACT_SHA,
   });
   assert.equal(request.privateExactSha, TED_LIVE_PRIVATE_EXACT_SHA);
   assert.throws(() => validateTedLiveRequest({
-    requestId: 'ted-live-11be8e4',
+    requestId: 'ted-live-d52c3d4',
     privateExactSha: '0'.repeat(40),
   }), /ted_live_private_exact_sha_mismatch/);
   assert.throws(() => validateTedLiveRequest({
-    requestId: 'ted-live-11be8e4',
+    requestId: 'ted-live-d52c3d4',
     privateExactSha: TED_LIVE_PRIVATE_EXACT_SHA,
     endpoint: 'https://example.test',
   }), /ted_live_request_shape_invalid/);
@@ -68,7 +68,7 @@ test('summarizes field names and counts without copying source values', () => {
   assert.doesNotMatch(serialized, /Private Person/);
 });
 
-test('sends one fixed POST and emits only the sanitized verdict contract', async () => {
+test('sends one executable fixed POST and emits only the sanitized verdict contract', async () => {
   let capturedUrl;
   let capturedInit;
   const fakeFetch = async (url, init) => {
@@ -91,7 +91,7 @@ test('sends one fixed POST and emits only the sanitized verdict contract', async
   };
 
   const result = await runTedLiveProbe({
-    requestId: 'ted-live-11be8e4',
+    requestId: 'ted-live-d52c3d4',
     privateExactSha: TED_LIVE_PRIVATE_EXACT_SHA,
   }, fakeFetch);
 
@@ -104,8 +104,10 @@ test('sends one fixed POST and emits only the sanitized verdict contract', async
   assert.equal(wire.query, TED_LIVE_QUERY);
   assert.equal(wire.scope, 'ALL');
   assert.equal(wire.limit, 1);
+  assert.equal(wire.checkQuerySyntax, false);
   assert.equal(result.verdict, 'PASS');
   assert.equal(result.scope, 'ALL');
+  assert.equal(result.checkQuerySyntax, false);
   assert.equal(result.contactValuesCopied, false);
   assert.equal(result.rawRowsLogged, false);
   assert.equal(result.rawPayloadPersisted, false);
