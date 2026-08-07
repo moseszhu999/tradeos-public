@@ -1,0 +1,8 @@
+{
+  "requestId": "n1-authz-latest-main-57004ec",
+  "privateExactSha": "57004eca8111a04582fcbee144bc2f072e90b943",
+  "expectedBaseSha": "438dc4317b788908971656303d0f0da8b2247e1e",
+  "expectedMainSha": "",
+  "validationProfile": "neon-business-authorization-foundation",
+  "expectedChangedFileCount": 5
+}
