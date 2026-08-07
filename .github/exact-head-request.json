@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-source-integration-registry-3c8e666",
+  "privateExactSha": "3c8e666d00fa059789a11b55279659496827d4a7",
+  "expectedBaseSha": "18eb4070c372c732c3733f166683b38587ea39c4",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-source-registry",
+  "expectedChangedFileCount": 3
+}
