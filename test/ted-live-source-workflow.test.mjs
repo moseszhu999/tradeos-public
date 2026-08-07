@@ -20,8 +20,9 @@ test('TED live workflow is path-scoped, read-only and executes the trusted base 
 
 test('TED live probe has one fixed official endpoint and no secret or product-write dependencies', () => {
   assert.match(script, /https:\/\/api\.ted\.europa\.eu\/v3\/notices\/search/);
-  assert.match(script, /notice-type = cn-standard/);
-  assert.match(script, /TED_LIVE_LIMIT = 3/);
+  assert.match(script, /publication-number = 151703-2026/);
+  assert.match(script, /TED_LIVE_SCOPE = 'ALL'/);
+  assert.match(script, /TED_LIVE_LIMIT = 1/);
   assert.match(script, /contactValuesCopied:\s*false/);
   assert.match(script, /rawRowsLogged:\s*false/);
   assert.match(script, /databaseWritePerformed:\s*false/);
