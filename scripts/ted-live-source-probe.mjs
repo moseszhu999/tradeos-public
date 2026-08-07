@@ -6,7 +6,7 @@ export const TED_LIVE_ENDPOINT = 'https://api.ted.europa.eu/v3/notices/search';
 export const TED_LIVE_QUERY = 'publication-number = 151703-2026';
 export const TED_LIVE_SCOPE = 'ALL';
 export const TED_LIVE_LIMIT = 1;
-export const TED_LIVE_PRIVATE_EXACT_SHA = '11be8e46041a8e18b7dd4cda616673c0697504b0';
+export const TED_LIVE_PRIVATE_EXACT_SHA = 'd52c3d48dfd42cf6037a81088349e8e691705d8c';
 export const TED_LIVE_REQUEST_PATH = '.github/ted-live-source-probe-request.json';
 export const TED_LIVE_FIELDS = Object.freeze([
   'publication-number',
@@ -95,7 +95,7 @@ export async function runTedLiveProbe(request, fetchImpl = fetch) {
       page: 1,
       limit: TED_LIVE_LIMIT,
       scope: TED_LIVE_SCOPE,
-      checkQuerySyntax: true,
+      checkQuerySyntax: false,
       paginationMode: 'PAGE_NUMBER',
     }),
     signal: AbortSignal.timeout(20_000),
@@ -112,8 +112,9 @@ export async function runTedLiveProbe(request, fetchImpl = fetch) {
     requestId: request.requestId,
     privateExactSha: request.privateExactSha,
     endpoint: TED_LIVE_ENDPOINT,
-    queryId: 'fixed-known-cn-standard-151703-2026-v1',
+    queryId: 'fixed-known-cn-standard-151703-2026-v2',
     scope: TED_LIVE_SCOPE,
+    checkQuerySyntax: false,
     requestedLimit: TED_LIVE_LIMIT,
     httpStatus: response.status,
     receivedRows: summary.receivedRows,
