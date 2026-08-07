@@ -1,0 +1,8 @@
+{
+  "requestId": "m1-source-registry-world-bank-f6a3023",
+  "privateExactSha": "f6a30231c9ec1a03264d6f7f9e29862aa4094c2c",
+  "expectedBaseSha": "8642f55575248632eba34ab5999cc62a121882af",
+  "expectedMainSha": "",
+  "validationProfile": "public-market-source-registry",
+  "expectedChangedFileCount": 3
+}
