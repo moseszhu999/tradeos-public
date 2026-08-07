@@ -2,17 +2,41 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PROFILE_DEFINITIONS } from '../scripts/run-private-profile.mjs';
 
-test('all profiles use fixed npm commands only', () => {
+const ALLOWED_NODE_COMMANDS = new Set([
+  'node --check scripts/tradeos-ted-search-opportunities.mjs',
+  'node --check scripts/tradeos-world-bank-procurement-opportunities.mjs',
+]);
+
+const SHELL_META = /[;&|`$<>\n\r]/;
+
+test('all profiles use fixed reviewed commands only', () => {
+  const observedNodeCommands = new Set();
+
   for (const [name, definition] of Object.entries(PROFILE_DEFINITIONS)) {
     assert.ok(name.length > 0);
     assert.ok(Array.isArray(definition.commands));
     assert.ok(definition.commands.length > 0);
+
     for (const [command, args] of definition.commands) {
-      assert.equal(command, 'npm');
+      assert.ok(command === 'npm' || command === 'node');
       assert.ok(Array.isArray(args));
       assert.ok(args.length > 0);
+      assert.ok(args.every((arg) => typeof arg === 'string' && arg.length > 0 && !SHELL_META.test(arg)));
+
+      if (command === 'node') {
+        assert.equal(args.length, 2);
+        assert.equal(args[0], '--check');
+        const serialized = `${command} ${args.join(' ')}`;
+        assert.ok(ALLOWED_NODE_COMMANDS.has(serialized));
+        observedNodeCommands.add(serialized);
+        continue;
+      }
+
+      assert.ok(['ci', 'test', 'run'].includes(args[0]));
     }
   }
+
+  assert.deepEqual(observedNodeCommands, ALLOWED_NODE_COMMANDS);
 });
 
 test('Codex and WorkBuddy profiles require canonical implementation and dedicated tests', () => {
