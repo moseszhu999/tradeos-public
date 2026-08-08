@@ -1,0 +1,8 @@
+{
+  "requestId": "n1-authz-refreshed-89a9601",
+  "privateExactSha": "89a9601c9c97407b38fa3e6f5e9c9de05d718f3b",
+  "expectedBaseSha": "d5dcfd81680333346aefa87283f16e16bd9c1aee",
+  "expectedMainSha": "",
+  "validationProfile": "neon-business-authorization-foundation",
+  "expectedChangedFileCount": 5
+}
