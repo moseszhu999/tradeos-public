@@ -25,6 +25,9 @@ export const TARGETS = Object.freeze({
   'vercel-release-decoupling': Object.freeze({
     testFile: 'tests/vercel-production-deploy-decoupling.test.ts',
   }),
+  'group-work-inbox': Object.freeze({
+    testFile: 'tests/group-work-entry-work-inbox.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;

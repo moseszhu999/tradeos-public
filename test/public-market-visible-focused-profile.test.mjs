@@ -23,6 +23,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'bottom-up-cockpit',
     'business-channel-contracts',
     'evidence-feedback-visible',
+    'group-work-inbox',
     'market-shared-case-proposal',
     'market-watch-visible',
     'neon-business-empty-success',
@@ -35,6 +36,7 @@ test('locks focused targets to explicitly owned private test files', () => {
   assert.equal(TARGETS['business-channel-contracts'].testFile, 'tests/business-channel-contracts.test.ts');
   assert.equal(TARGETS['bottom-up-cockpit'].testFile, 'tests/trade-bottom-up-cockpit.test.ts');
   assert.equal(TARGETS['vercel-release-decoupling'].testFile, 'tests/vercel-production-deploy-decoupling.test.ts');
+  assert.equal(TARGETS['group-work-inbox'].testFile, 'tests/group-work-entry-work-inbox.test.ts');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
@@ -73,6 +75,13 @@ test('accepts only exact request fields and bounded exact scope', () => {
   });
   assert.equal(releaseDecoupling.testFile, 'tests/vercel-production-deploy-decoupling.test.ts');
   assert.equal(releaseDecoupling.expectedChangedFileCount, 2);
+  const workInbox = validateRequest({
+    ...baseRequest,
+    target: 'group-work-inbox',
+    expectedChangedFileCount: 3,
+  });
+  assert.equal(workInbox.testFile, 'tests/group-work-entry-work-inbox.test.ts');
+  assert.equal(workInbox.expectedChangedFileCount, 3);
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
