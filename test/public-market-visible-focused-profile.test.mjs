@@ -18,15 +18,26 @@ const baseRequest = {
   expectedChangedFileCount: 3,
 };
 
-test('locks visible adapter targets to the two owned focused test files', () => {
-  assert.deepEqual(Object.keys(TARGETS).sort(), ['evidence-feedback-visible', 'market-watch-visible']);
+test('locks focused targets to explicitly owned private test files', () => {
+  assert.deepEqual(Object.keys(TARGETS).sort(), [
+    'evidence-feedback-visible',
+    'market-shared-case-proposal',
+    'market-watch-visible',
+  ]);
   assert.equal(TARGETS['market-watch-visible'].testFile, 'tests/trade-public-market-market-watch-visible-adapter.test.ts');
   assert.equal(TARGETS['evidence-feedback-visible'].testFile, 'tests/trade-public-market-evidence-feedback-visible-adapter.test.ts');
+  assert.equal(TARGETS['market-shared-case-proposal'].testFile, 'tests/trade-neon-market-shared-case-proposal-contract.test.ts');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
   const request = validateRequest(baseRequest);
   assert.equal(request.expectedChangedFileCount, 3);
+  const proposal = validateRequest({
+    ...baseRequest,
+    target: 'market-shared-case-proposal',
+    expectedChangedFileCount: 6,
+  });
+  assert.equal(proposal.testFile, 'tests/trade-neon-market-shared-case-proposal-contract.test.ts');
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
