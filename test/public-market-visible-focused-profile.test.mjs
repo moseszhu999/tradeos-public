@@ -26,6 +26,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'market-shared-case-proposal',
     'market-watch-visible',
     'neon-business-empty-success',
+    'vercel-release-decoupling',
   ]);
   assert.equal(TARGETS['market-watch-visible'].testFile, 'tests/trade-public-market-market-watch-visible-adapter.test.ts');
   assert.equal(TARGETS['evidence-feedback-visible'].testFile, 'tests/trade-public-market-evidence-feedback-visible-adapter.test.ts');
@@ -33,6 +34,7 @@ test('locks focused targets to explicitly owned private test files', () => {
   assert.equal(TARGETS['neon-business-empty-success'].testFile, 'tests/trade-neon-business-data-api-empty-success.test.ts');
   assert.equal(TARGETS['business-channel-contracts'].testFile, 'tests/business-channel-contracts.test.ts');
   assert.equal(TARGETS['bottom-up-cockpit'].testFile, 'tests/trade-bottom-up-cockpit.test.ts');
+  assert.equal(TARGETS['vercel-release-decoupling'].testFile, 'tests/vercel-production-deploy-decoupling.test.ts');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
@@ -64,6 +66,13 @@ test('accepts only exact request fields and bounded exact scope', () => {
   });
   assert.equal(cockpit.testFile, 'tests/trade-bottom-up-cockpit.test.ts');
   assert.equal(cockpit.expectedChangedFileCount, 2);
+  const releaseDecoupling = validateRequest({
+    ...baseRequest,
+    target: 'vercel-release-decoupling',
+    expectedChangedFileCount: 2,
+  });
+  assert.equal(releaseDecoupling.testFile, 'tests/vercel-production-deploy-decoupling.test.ts');
+  assert.equal(releaseDecoupling.expectedChangedFileCount, 2);
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
