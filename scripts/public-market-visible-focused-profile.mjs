@@ -10,6 +10,9 @@ export const TARGETS = Object.freeze({
   'evidence-feedback-visible': Object.freeze({
     testFile: 'tests/trade-public-market-evidence-feedback-visible-adapter.test.ts',
   }),
+  'market-shared-case-proposal': Object.freeze({
+    testFile: 'tests/trade-neon-market-shared-case-proposal-contract.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
