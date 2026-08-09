@@ -1,0 +1,7 @@
+{
+  "requestId": "vercel-release-decoupling-387de24",
+  "target": "vercel-release-decoupling",
+  "privateExactSha": "387de24032d74a139c4a6a0ab8a722b4a1f9a74b",
+  "expectedBaseSha": "d2bba1b34590f8f04aed9f0e9b4ab717f2e06f27",
+  "expectedChangedFileCount": 2
+}
