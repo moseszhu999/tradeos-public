@@ -20,6 +20,7 @@ const baseRequest = {
 
 test('locks focused targets to explicitly owned private test files', () => {
   assert.deepEqual(Object.keys(TARGETS).sort(), [
+    'business-channel-contracts',
     'evidence-feedback-visible',
     'market-shared-case-proposal',
     'market-watch-visible',
@@ -29,6 +30,7 @@ test('locks focused targets to explicitly owned private test files', () => {
   assert.equal(TARGETS['evidence-feedback-visible'].testFile, 'tests/trade-public-market-evidence-feedback-visible-adapter.test.ts');
   assert.equal(TARGETS['market-shared-case-proposal'].testFile, 'tests/trade-neon-market-shared-case-proposal-contract.test.ts');
   assert.equal(TARGETS['neon-business-empty-success'].testFile, 'tests/trade-neon-business-data-api-empty-success.test.ts');
+  assert.equal(TARGETS['business-channel-contracts'].testFile, 'tests/business-channel-contracts.test.ts');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
@@ -46,6 +48,13 @@ test('accepts only exact request fields and bounded exact scope', () => {
     expectedChangedFileCount: 3,
   });
   assert.equal(emptySuccess.testFile, 'tests/trade-neon-business-data-api-empty-success.test.ts');
+  const businessChannel = validateRequest({
+    ...baseRequest,
+    target: 'business-channel-contracts',
+    expectedChangedFileCount: 4,
+  });
+  assert.equal(businessChannel.testFile, 'tests/business-channel-contracts.test.ts');
+  assert.equal(businessChannel.expectedChangedFileCount, 4);
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
