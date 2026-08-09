@@ -1,0 +1,7 @@
+{
+  "requestId": "n2-proposal-85ac433-r1",
+  "target": "market-shared-case-proposal",
+  "privateExactSha": "85ac433c0b35ea6140a37a3762660967bead4e2d",
+  "expectedBaseSha": "02985010fbd91277df94d97984401af913a7922a",
+  "expectedChangedFileCount": 6
+}
