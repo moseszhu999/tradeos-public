@@ -22,6 +22,9 @@ export const TARGETS = Object.freeze({
   'bottom-up-cockpit': Object.freeze({
     testFile: 'tests/trade-bottom-up-cockpit.test.ts',
   }),
+  'vercel-release-decoupling': Object.freeze({
+    testFile: 'tests/vercel-production-deploy-decoupling.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
