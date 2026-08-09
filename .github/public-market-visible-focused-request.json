@@ -1,0 +1,7 @@
+{
+  "requestId": "n1-empty-success-507197d",
+  "target": "neon-business-empty-success",
+  "privateExactSha": "507197d6f41b5cbebd2b894d3b8c0aa101fd3d25",
+  "expectedBaseSha": "02985010fbd91277df94d97984401af913a7922a",
+  "expectedChangedFileCount": 3
+}
