@@ -1,0 +1,7 @@
+{
+  "requestId": "n1-snapshot-convergence-06ecb34",
+  "target": "neon-business-empty-success",
+  "privateExactSha": "06ecb349d53b17be859afb66720de6d61df388a9",
+  "expectedBaseSha": "355a7169bfe8e48c7f78fa874cc422a394553d56",
+  "expectedChangedFileCount": 3
+}
