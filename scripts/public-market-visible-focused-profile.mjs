@@ -16,6 +16,9 @@ export const TARGETS = Object.freeze({
   'neon-business-empty-success': Object.freeze({
     testFile: 'tests/trade-neon-business-data-api-empty-success.test.ts',
   }),
+  'business-channel-contracts': Object.freeze({
+    testFile: 'tests/business-channel-contracts.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
