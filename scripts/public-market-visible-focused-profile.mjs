@@ -19,6 +19,9 @@ export const TARGETS = Object.freeze({
   'business-channel-contracts': Object.freeze({
     testFile: 'tests/business-channel-contracts.test.ts',
   }),
+  'bottom-up-cockpit': Object.freeze({
+    testFile: 'tests/trade-bottom-up-cockpit.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
