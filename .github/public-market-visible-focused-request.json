@@ -1,0 +1,7 @@
+{
+  "requestId": "business-channel-c902e27",
+  "target": "business-channel-contracts",
+  "privateExactSha": "c902e27f69854c215aba297cee059027930ac6ee",
+  "expectedBaseSha": "02985010fbd91277df94d97984401af913a7922a",
+  "expectedChangedFileCount": 4
+}
