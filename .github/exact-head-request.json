@@ -1,0 +1,8 @@
+{
+  "requestId": "n2-proposal-9305d53-r1",
+  "privateExactSha": "9305d537c787ab46ef2483cae18ceceb48410c3d",
+  "expectedBaseSha": "02985010fbd91277df94d97984401af913a7922a",
+  "expectedMainSha": "",
+  "validationProfile": "web-product",
+  "expectedChangedFileCount": 7
+}
