@@ -1,0 +1,7 @@
+{
+  "requestId": "first-principles-zero-lower-bound-19d24e8-v1",
+  "target": "first-principles-shadow-run",
+  "privateExactSha": "19d24e87d4e839fd4d6a87bdb48245ce490478ea",
+  "expectedBaseSha": "228ce012d8b2dc87f188d5a8169e19a35d3e3510",
+  "expectedChangedFileCount": 4
+}
