@@ -34,6 +34,9 @@ export const TARGETS = Object.freeze({
   'tradeos-n2-work-source': Object.freeze({
     testFile: 'tests/group-work-entry-tradeos-proposal-work-source.test.ts',
   }),
+  'n2-specification-sourcing-conversion': Object.freeze({
+    testFile: 'tests/trade-neon-sourcing-conversion',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
