@@ -1,0 +1,7 @@
+{
+  "requestId": "first-principles-pack-ccfe38f7-v1",
+  "target": "first-principles-proof-pack",
+  "privateExactSha": "ccfe38f7af5b347ac3859f5507b36ba216722995",
+  "expectedBaseSha": "9c55f2980b8699435b23275f4a803ca86df7224e",
+  "expectedChangedFileCount": 4
+}
