@@ -4,45 +4,20 @@ import { readFileSync } from 'node:fs';
 
 export const REQUEST_PATH = '.github/public-market-visible-focused-request.json';
 export const TARGETS = Object.freeze({
-  'market-watch-visible': Object.freeze({
-    testFile: 'tests/trade-public-market-market-watch-visible-adapter.test.ts',
-  }),
-  'evidence-feedback-visible': Object.freeze({
-    testFile: 'tests/trade-public-market-evidence-feedback-visible-adapter.test.ts',
-  }),
-  'market-shared-case-proposal': Object.freeze({
-    testFile: 'tests/trade-neon-market-shared-case-proposal-contract.test.ts',
-  }),
-  'neon-business-empty-success': Object.freeze({
-    testFile: 'tests/trade-neon-business-data-api-empty-success.test.ts',
-  }),
-  'business-channel-contracts': Object.freeze({
-    testFile: 'tests/business-channel-contracts.test.ts',
-  }),
-  'bottom-up-cockpit': Object.freeze({
-    testFile: 'tests/trade-bottom-up-cockpit.test.ts',
-  }),
-  'vercel-release-decoupling': Object.freeze({
-    testFile: 'tests/vercel-production-deploy-decoupling.test.ts',
-  }),
-  'group-work-inbox': Object.freeze({
-    testFile: 'tests/group-work-entry-work-inbox.test.ts',
-  }),
-  'group-work-provider-transport': Object.freeze({
-    testFile: 'tests/group-work-entry-provider-transport.test.ts',
-  }),
-  'tradeos-n2-work-source': Object.freeze({
-    testFile: 'tests/group-work-entry-tradeos-proposal-work-source.test.ts',
-  }),
-  'n2-specification-sourcing-conversion': Object.freeze({
-    testFile: 'tests/trade-neon-sourcing-conversion',
-  }),
-  'n3-a0-rfq-shared-case-preparation': Object.freeze({
-    testFile: 'tests/trade-neon-rfq-shared-case-preparation',
-  }),
-  'first-principles-proof-core': Object.freeze({
-    testFile: 'tests/first-principles-proof-contracts.test.ts',
-  }),
+  'market-watch-visible': Object.freeze({ testFile: 'tests/trade-public-market-market-watch-visible-adapter.test.ts' }),
+  'evidence-feedback-visible': Object.freeze({ testFile: 'tests/trade-public-market-evidence-feedback-visible-adapter.test.ts' }),
+  'market-shared-case-proposal': Object.freeze({ testFile: 'tests/trade-neon-market-shared-case-proposal-contract.test.ts' }),
+  'neon-business-empty-success': Object.freeze({ testFile: 'tests/trade-neon-business-data-api-empty-success.test.ts' }),
+  'business-channel-contracts': Object.freeze({ testFile: 'tests/business-channel-contracts.test.ts' }),
+  'bottom-up-cockpit': Object.freeze({ testFile: 'tests/trade-bottom-up-cockpit.test.ts' }),
+  'vercel-release-decoupling': Object.freeze({ testFile: 'tests/vercel-production-deploy-decoupling.test.ts' }),
+  'group-work-inbox': Object.freeze({ testFile: 'tests/group-work-entry-work-inbox.test.ts' }),
+  'group-work-provider-transport': Object.freeze({ testFile: 'tests/group-work-entry-provider-transport.test.ts' }),
+  'tradeos-n2-work-source': Object.freeze({ testFile: 'tests/group-work-entry-tradeos-proposal-work-source.test.ts' }),
+  'n2-specification-sourcing-conversion': Object.freeze({ testFile: 'tests/trade-neon-sourcing-conversion' }),
+  'n3-a0-rfq-shared-case-preparation': Object.freeze({ testFile: 'tests/trade-neon-rfq-shared-case-preparation' }),
+  'first-principles-proof-core': Object.freeze({ testFile: 'tests/first-principles-proof-contracts.test.ts' }),
+  'first-principles-proof-pack': Object.freeze({ testFile: 'tests/first-principles-proof-pack.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
