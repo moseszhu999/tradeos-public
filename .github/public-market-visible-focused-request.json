@@ -1,0 +1,7 @@
+{
+  "requestId": "n2-sourcing-f57658a-v1",
+  "target": "n2-specification-sourcing-conversion",
+  "privateExactSha": "f57658a0f5302a25a7d5b27d6b2ba1ee0be8c851",
+  "expectedBaseSha": "6958c3b5fb3a8d8b6b70b7a614910b0e1ea9202b",
+  "expectedChangedFileCount": 9
+}
