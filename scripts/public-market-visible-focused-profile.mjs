@@ -31,6 +31,9 @@ export const TARGETS = Object.freeze({
   'group-work-provider-transport': Object.freeze({
     testFile: 'tests/group-work-entry-provider-transport.test.ts',
   }),
+  'tradeos-n2-work-source': Object.freeze({
+    testFile: 'tests/group-work-entry-tradeos-proposal-work-source.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
