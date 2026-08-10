@@ -28,6 +28,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'market-shared-case-proposal',
     'market-watch-visible',
     'neon-business-empty-success',
+    'tradeos-n2-work-source',
     'vercel-release-decoupling',
   ]);
   assert.equal(TARGETS['market-watch-visible'].testFile, 'tests/trade-public-market-market-watch-visible-adapter.test.ts');
@@ -39,6 +40,7 @@ test('locks focused targets to explicitly owned private test files', () => {
   assert.equal(TARGETS['vercel-release-decoupling'].testFile, 'tests/vercel-production-deploy-decoupling.test.ts');
   assert.equal(TARGETS['group-work-inbox'].testFile, 'tests/group-work-entry-work-inbox.test.ts');
   assert.equal(TARGETS['group-work-provider-transport'].testFile, 'tests/group-work-entry-provider-transport.test.ts');
+  assert.equal(TARGETS['tradeos-n2-work-source'].testFile, 'tests/group-work-entry-tradeos-proposal-work-source.test.ts');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
@@ -91,6 +93,13 @@ test('accepts only exact request fields and bounded exact scope', () => {
   });
   assert.equal(providerTransport.testFile, 'tests/group-work-entry-provider-transport.test.ts');
   assert.equal(providerTransport.expectedChangedFileCount, 3);
+  const tradeosWorkSource = validateRequest({
+    ...baseRequest,
+    target: 'tradeos-n2-work-source',
+    expectedChangedFileCount: 6,
+  });
+  assert.equal(tradeosWorkSource.testFile, 'tests/group-work-entry-tradeos-proposal-work-source.test.ts');
+  assert.equal(tradeosWorkSource.expectedChangedFileCount, 6);
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
