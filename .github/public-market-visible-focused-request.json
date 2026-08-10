@@ -1,0 +1,7 @@
+{
+  "requestId": "physical-bom-1c525dd1-v1",
+  "target": "first-principles-physical-bom",
+  "privateExactSha": "1c525dd1d528bb2c03a145111c7ad721337f9c6d",
+  "expectedBaseSha": "7faf7adf21e7bdf82470a8af917ad675efa7a62b",
+  "expectedChangedFileCount": 4
+}
