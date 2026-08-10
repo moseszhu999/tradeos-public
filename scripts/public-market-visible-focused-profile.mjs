@@ -19,6 +19,7 @@ export const TARGETS = Object.freeze({
   'first-principles-proof-core': Object.freeze({ testFile: 'tests/first-principles-proof-contracts.test.ts' }),
   'first-principles-proof-pack': Object.freeze({ testFile: 'tests/first-principles-proof-pack.test.ts' }),
   'first-principles-physical-bom': Object.freeze({ testFile: 'tests/first-principles-physical-bom.test.ts' }),
+  'first-principles-shadow-run': Object.freeze({ testFile: 'tests/first-principles-shadow-run.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;

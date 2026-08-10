@@ -28,6 +28,7 @@ const targetCases = [
   ['first-principles-proof-core', 6, 'tests/first-principles-proof-contracts.test.ts'],
   ['first-principles-proof-pack', 4, 'tests/first-principles-proof-pack.test.ts'],
   ['first-principles-physical-bom', 4, 'tests/first-principles-physical-bom.test.ts'],
+  ['first-principles-shadow-run', 5, 'tests/first-principles-shadow-run.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -38,6 +39,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'first-principles-physical-bom',
     'first-principles-proof-core',
     'first-principles-proof-pack',
+    'first-principles-shadow-run',
     'group-work-inbox',
     'group-work-provider-transport',
     'market-shared-case-proposal',
@@ -77,8 +79,8 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['npm', ['run', 'typecheck']],
     ['npm', ['run', 'build']],
   ]);
-  const physicalBom = validateRequest({ ...baseRequest, target: 'first-principles-physical-bom', expectedChangedFileCount: 4 });
-  assert.deepEqual(shellPlan(physicalBom)[1], ['npm', ['test', '--', 'tests/first-principles-physical-bom.test.ts']]);
+  const shadowRun = validateRequest({ ...baseRequest, target: 'first-principles-shadow-run', expectedChangedFileCount: 5 });
+  assert.deepEqual(shellPlan(shadowRun)[1], ['npm', ['test', '--', 'tests/first-principles-shadow-run.test.ts']]);
 });
 
 test('workflow is path-scoped, trusted-base driven, read-only private checkout and sealed', () => {
