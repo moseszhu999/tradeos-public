@@ -1,0 +1,7 @@
+{
+  "requestId": "first-principles-observation-f38e574-v1",
+  "target": "first-principles-shadow-observation-adapter",
+  "privateExactSha": "f38e5746b31343f895fd382ca1a0f23928b90577",
+  "expectedBaseSha": "45d9585a14804f7ce44ababde76e48dde3c60a0e",
+  "expectedChangedFileCount": 4
+}
