@@ -40,6 +40,9 @@ export const TARGETS = Object.freeze({
   'n3-a0-rfq-shared-case-preparation': Object.freeze({
     testFile: 'tests/trade-neon-rfq-shared-case-preparation',
   }),
+  'first-principles-proof-core': Object.freeze({
+    testFile: 'tests/first-principles-proof-contracts.test.ts',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
