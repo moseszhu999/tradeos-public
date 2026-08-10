@@ -37,6 +37,9 @@ export const TARGETS = Object.freeze({
   'n2-specification-sourcing-conversion': Object.freeze({
     testFile: 'tests/trade-neon-sourcing-conversion',
   }),
+  'n3-rfq-shared-case-a0': Object.freeze({
+    testFile: 'tests/trade-neon-rfq-shared-case-preparation',
+  }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
