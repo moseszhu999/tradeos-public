@@ -23,6 +23,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'bottom-up-cockpit',
     'business-channel-contracts',
     'evidence-feedback-visible',
+    'first-principles-proof-core',
     'group-work-inbox',
     'group-work-provider-transport',
     'market-shared-case-proposal',
@@ -45,6 +46,7 @@ test('locks focused targets to explicitly owned private test files', () => {
   assert.equal(TARGETS['tradeos-n2-work-source'].testFile, 'tests/group-work-entry-tradeos-proposal-work-source.test.ts');
   assert.equal(TARGETS['n2-specification-sourcing-conversion'].testFile, 'tests/trade-neon-sourcing-conversion');
   assert.equal(TARGETS['n3-a0-rfq-shared-case-preparation'].testFile, 'tests/trade-neon-rfq-shared-case-preparation');
+  assert.equal(TARGETS['first-principles-proof-core'].testFile, 'tests/first-principles-proof-contracts.test.ts');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
@@ -78,6 +80,9 @@ test('accepts only exact request fields and bounded exact scope', () => {
   const n3A0 = validateRequest({ ...baseRequest, target: 'n3-a0-rfq-shared-case-preparation', expectedChangedFileCount: 8 });
   assert.equal(n3A0.testFile, 'tests/trade-neon-rfq-shared-case-preparation');
   assert.equal(n3A0.expectedChangedFileCount, 8);
+  const proofCore = validateRequest({ ...baseRequest, target: 'first-principles-proof-core', expectedChangedFileCount: 6 });
+  assert.equal(proofCore.testFile, 'tests/first-principles-proof-contracts.test.ts');
+  assert.equal(proofCore.expectedChangedFileCount, 6);
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
@@ -96,6 +101,8 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
   assert.deepEqual(shellPlan(sourcing)[1], ['npm', ['test', '--', 'tests/trade-neon-sourcing-conversion']]);
   const n3A0 = validateRequest({ ...baseRequest, target: 'n3-a0-rfq-shared-case-preparation', expectedChangedFileCount: 8 });
   assert.deepEqual(shellPlan(n3A0)[1], ['npm', ['test', '--', 'tests/trade-neon-rfq-shared-case-preparation']]);
+  const proofCore = validateRequest({ ...baseRequest, target: 'first-principles-proof-core', expectedChangedFileCount: 6 });
+  assert.deepEqual(shellPlan(proofCore)[1], ['npm', ['test', '--', 'tests/first-principles-proof-contracts.test.ts']]);
 });
 
 test('workflow is path-scoped, trusted-base driven, read-only private checkout and sealed', () => {
