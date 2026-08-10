@@ -1,0 +1,7 @@
+{
+  "requestId": "n3-a0-db96a9da-v1",
+  "target": "n3-a0-rfq-shared-case-preparation",
+  "privateExactSha": "db96a9daee485400788aa93c02ffc4d842f0998c",
+  "expectedBaseSha": "934b4c76cdf523a9337892860bb1c0e0b8b4467d",
+  "expectedChangedFileCount": 8
+}
