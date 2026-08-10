@@ -1,0 +1,7 @@
+{
+  "requestId": "n2-sourcing-e4bec224-v1",
+  "target": "n2-specification-sourcing-conversion",
+  "privateExactSha": "e4bec224a0eec0fffd7e4df447ddb9f8567012dc",
+  "expectedBaseSha": "6958c3b5fb3a8d8b6b70b7a614910b0e1ea9202b",
+  "expectedChangedFileCount": 10
+}
