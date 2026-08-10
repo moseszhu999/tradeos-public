@@ -28,6 +28,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'market-shared-case-proposal',
     'market-watch-visible',
     'n2-specification-sourcing-conversion',
+    'n3-rfq-shared-case-a0',
     'neon-business-empty-success',
     'tradeos-n2-work-source',
     'vercel-release-decoupling',
@@ -43,6 +44,7 @@ test('locks focused targets to explicitly owned private test files', () => {
   assert.equal(TARGETS['group-work-provider-transport'].testFile, 'tests/group-work-entry-provider-transport.test.ts');
   assert.equal(TARGETS['tradeos-n2-work-source'].testFile, 'tests/group-work-entry-tradeos-proposal-work-source.test.ts');
   assert.equal(TARGETS['n2-specification-sourcing-conversion'].testFile, 'tests/trade-neon-sourcing-conversion');
+  assert.equal(TARGETS['n3-rfq-shared-case-a0'].testFile, 'tests/trade-neon-rfq-shared-case-preparation');
 });
 
 test('accepts only exact request fields and bounded exact scope', () => {
@@ -109,6 +111,13 @@ test('accepts only exact request fields and bounded exact scope', () => {
   });
   assert.equal(sourcingConversion.testFile, 'tests/trade-neon-sourcing-conversion');
   assert.equal(sourcingConversion.expectedChangedFileCount, 9);
+  const n3A0 = validateRequest({
+    ...baseRequest,
+    target: 'n3-rfq-shared-case-a0',
+    expectedChangedFileCount: 9,
+  });
+  assert.equal(n3A0.testFile, 'tests/trade-neon-rfq-shared-case-preparation');
+  assert.equal(n3A0.expectedChangedFileCount, 9);
   assert.throws(() => validateRequest({ ...baseRequest, target: 'web-product' }), /target_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, privateExactSha: 'abc' }), /private_sha_invalid/);
   assert.throws(() => validateRequest({ ...baseRequest, expectedChangedFileCount: 0 }), /changed_file_count_invalid/);
@@ -129,6 +138,12 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     expectedChangedFileCount: 9,
   });
   assert.deepEqual(shellPlan(sourcing)[1], ['npm', ['test', '--', 'tests/trade-neon-sourcing-conversion']]);
+  const n3A0 = validateRequest({
+    ...baseRequest,
+    target: 'n3-rfq-shared-case-a0',
+    expectedChangedFileCount: 9,
+  });
+  assert.deepEqual(shellPlan(n3A0)[1], ['npm', ['test', '--', 'tests/trade-neon-rfq-shared-case-preparation']]);
 });
 
 test('workflow is path-scoped, trusted-base driven, read-only private checkout and sealed', () => {
