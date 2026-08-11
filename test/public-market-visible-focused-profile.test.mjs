@@ -38,6 +38,7 @@ const targetCases = [
   ['tradeos-oracle-fusion-readonly-binding', 5, 'tests/trade-protocols-oracle-fusion-readonly-binding.test.ts'],
   ['tradeos-sap-s4hana-readonly-binding', 4, 'tests/trade-protocols-sap-s4hana-readonly-binding.test.ts'],
   ['tradeos-kingdee-k3cloud-readonly-binding', 4, 'tests/trade-protocols-kingdee-k3cloud-readonly-binding.test.ts'],
+  ['tradeos-hsbc-trade-loans-binding', 4, 'tests/trade-protocols-hsbc-trade-finance-loans-binding.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -59,6 +60,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'neon-business-empty-success',
     'tradeos-authority-oracle-attestations',
     'tradeos-finance-connector-kit',
+    'tradeos-hsbc-trade-loans-binding',
     'tradeos-kingdee-k3cloud-readonly-binding',
     'tradeos-n2-work-source',
     'tradeos-oracle-fusion-readonly-binding',
@@ -115,6 +117,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-oracle-fusion-readonly-binding', 5, 'tests/trade-protocols-oracle-fusion-readonly-binding.test.ts'],
     ['tradeos-sap-s4hana-readonly-binding', 4, 'tests/trade-protocols-sap-s4hana-readonly-binding.test.ts'],
     ['tradeos-kingdee-k3cloud-readonly-binding', 4, 'tests/trade-protocols-kingdee-k3cloud-readonly-binding.test.ts'],
+    ['tradeos-hsbc-trade-loans-binding', 4, 'tests/trade-protocols-hsbc-trade-finance-loans-binding.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
