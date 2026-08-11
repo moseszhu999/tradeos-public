@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-sap-s4hana-e1314b1-focused-v1",
+  "target": "tradeos-sap-s4hana-readonly-binding",
+  "privateExactSha": "e1314b1418e2d536886c2e871667f8a73339e50a",
+  "expectedBaseSha": "d536c061ad03e9f0ced28ef975fed7133df6fbd7",
+  "expectedChangedFileCount": 4
+}
