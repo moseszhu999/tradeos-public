@@ -40,6 +40,7 @@ export const TARGETS = Object.freeze({
   'tradeos-financial-institution-execution-authority-replay-bound-assessment': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-execution-authority-replay-bound-assessment.test.ts' }),
   'tradeos-financial-institution-runtime-invocation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-runtime-invocation-envelope.test.ts' }),
   'tradeos-financial-institution-provider-dispatch-observation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-provider-dispatch-observation.test.ts' }),
+  'tradeos-financial-institution-provider-transport-outcome-observation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-provider-transport-outcome-observation.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
