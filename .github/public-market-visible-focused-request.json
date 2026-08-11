@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-conformance-afb98dd-v1",
+  "target": "tradeos-financial-institution-binding-registry",
+  "privateExactSha": "afb98dd13e34a2a54b000dc1afa0d2e7859e8372",
+  "expectedBaseSha": "3d7d8474555a5460c702be033e9041536c23623c",
+  "expectedChangedFileCount": 4
+}
