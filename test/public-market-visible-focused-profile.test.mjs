@@ -32,6 +32,7 @@ const targetCases = [
   ['first-principles-shadow-observation-adapter', 4, 'tests/first-principles-shadow-observation-adapter.test.ts'],
   ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
   ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
+  ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -51,6 +52,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'n2-specification-sourcing-conversion',
     'n3-a0-rfq-shared-case-preparation',
     'neon-business-empty-success',
+    'tradeos-finance-connector-kit',
     'tradeos-n2-work-source',
     'tradeos-settlement-finance-interface',
     'tradeos-three-protocols',
@@ -113,6 +115,17 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
   assert.deepEqual(shellPlan(settlementFinance), [
     ['npm', ['ci', '--no-audit', '--no-fund']],
     ['npm', ['test', '--', 'tests/trade-protocols-settlement-transport-finance-interface.test.ts']],
+    ['npm', ['run', 'typecheck']],
+    ['npm', ['run', 'build']],
+  ]);
+  const financeConnector = validateRequest({
+    ...baseRequest,
+    target: 'tradeos-finance-connector-kit',
+    expectedChangedFileCount: 9,
+  });
+  assert.deepEqual(shellPlan(financeConnector), [
+    ['npm', ['ci', '--no-audit', '--no-fund']],
+    ['npm', ['test', '--', 'tests/trade-protocols-finance-connector-kit.test.ts']],
     ['npm', ['run', 'typecheck']],
     ['npm', ['run', 'build']],
   ]);
