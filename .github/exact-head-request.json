@@ -1,0 +1,8 @@
+{
+  "requestId": "tradeos-three-protocols-dddb3196-v1",
+  "privateExactSha": "dddb3196d920a8327e8c8117d357f6e7d67b70a5",
+  "expectedBaseSha": "dd162e184931e07a75f82fa0820dbc88ab2b225f",
+  "expectedMainSha": "",
+  "validationProfile": "bounded-runtime",
+  "expectedChangedFileCount": 10
+}
