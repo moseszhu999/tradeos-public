@@ -23,6 +23,7 @@ export const TARGETS = Object.freeze({
   'first-principles-shadow-observation-adapter': Object.freeze({ testFile: 'tests/first-principles-shadow-observation-adapter.test.ts' }),
   'tradeos-three-protocols': Object.freeze({ testFile: 'tests/trade-protocols-three-layer-core.test.ts' }),
   'tradeos-settlement-finance-interface': Object.freeze({ testFile: 'tests/trade-protocols-settlement-transport-finance-interface.test.ts' }),
+  'tradeos-finance-connector-kit': Object.freeze({ testFile: 'tests/trade-protocols-finance-connector-kit.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
