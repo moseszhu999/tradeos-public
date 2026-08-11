@@ -33,6 +33,7 @@ const targetCases = [
   ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
   ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
   ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
+  ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -52,6 +53,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'n2-specification-sourcing-conversion',
     'n3-a0-rfq-shared-case-preparation',
     'neon-business-empty-success',
+    'tradeos-authority-oracle-attestations',
     'tradeos-finance-connector-kit',
     'tradeos-n2-work-source',
     'tradeos-settlement-finance-interface',
@@ -96,39 +98,20 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     'npm',
     ['test', '--', 'tests/first-principles-shadow-observation-adapter.test.ts'],
   ]);
-  const threeProtocols = validateRequest({
-    ...baseRequest,
-    target: 'tradeos-three-protocols',
-    expectedChangedFileCount: 10,
-  });
-  assert.deepEqual(shellPlan(threeProtocols), [
-    ['npm', ['ci', '--no-audit', '--no-fund']],
-    ['npm', ['test', '--', 'tests/trade-protocols-three-layer-core.test.ts']],
-    ['npm', ['run', 'typecheck']],
-    ['npm', ['run', 'build']],
-  ]);
-  const settlementFinance = validateRequest({
-    ...baseRequest,
-    target: 'tradeos-settlement-finance-interface',
-    expectedChangedFileCount: 10,
-  });
-  assert.deepEqual(shellPlan(settlementFinance), [
-    ['npm', ['ci', '--no-audit', '--no-fund']],
-    ['npm', ['test', '--', 'tests/trade-protocols-settlement-transport-finance-interface.test.ts']],
-    ['npm', ['run', 'typecheck']],
-    ['npm', ['run', 'build']],
-  ]);
-  const financeConnector = validateRequest({
-    ...baseRequest,
-    target: 'tradeos-finance-connector-kit',
-    expectedChangedFileCount: 9,
-  });
-  assert.deepEqual(shellPlan(financeConnector), [
-    ['npm', ['ci', '--no-audit', '--no-fund']],
-    ['npm', ['test', '--', 'tests/trade-protocols-finance-connector-kit.test.ts']],
-    ['npm', ['run', 'typecheck']],
-    ['npm', ['run', 'build']],
-  ]);
+  for (const [target, count, testFile] of [
+    ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
+    ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
+    ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
+    ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
+  ]) {
+    const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
+    assert.deepEqual(shellPlan(parsed), [
+      ['npm', ['ci', '--no-audit', '--no-fund']],
+      ['npm', ['test', '--', testFile]],
+      ['npm', ['run', 'typecheck']],
+      ['npm', ['run', 'build']],
+    ]);
+  }
 });
 
 test('workflow is path-scoped, trusted-base driven, read-only private checkout and sealed', () => {
