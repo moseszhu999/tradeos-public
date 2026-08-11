@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-execution-authority-a1a3089-v1",
+  "target": "tradeos-financial-institution-execution-authority",
+  "privateExactSha": "a1a30891745dd9a40d92aa651cceab0eca031565",
+  "expectedBaseSha": "e0905234a51bcf75d02b316f1a992ca602c865c9",
+  "expectedChangedFileCount": 4
+}
