@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-provider-transport-outcome-4cb73bb-v1",
+  "target": "tradeos-financial-institution-provider-transport-outcome-observation",
+  "privateExactSha": "4cb73bb3210f78a29b88c21cd17723a866c6a5f5",
+  "expectedBaseSha": "d8782cf24dedddce090f2fa2a6086e0e3ea8d7a8",
+  "expectedChangedFileCount": 4
+}
