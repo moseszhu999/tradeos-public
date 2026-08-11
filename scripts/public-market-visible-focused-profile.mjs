@@ -36,6 +36,7 @@ export const TARGETS = Object.freeze({
   'tradeos-citi-payment-settlement-binding': Object.freeze({ testFile: 'tests/trade-protocols-citi-payment-settlement-binding.test.ts' }),
   'tradeos-financial-institution-onboarding-attestation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts' }),
   'tradeos-financial-institution-transport-activation-plan': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-transport-activation-plan.test.ts' }),
+  'tradeos-financial-institution-execution-authority': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-execution-authority.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;

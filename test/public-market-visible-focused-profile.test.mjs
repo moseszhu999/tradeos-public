@@ -45,6 +45,7 @@ const targetCases = [
   ['tradeos-citi-payment-settlement-binding', 6, 'tests/trade-protocols-citi-payment-settlement-binding.test.ts'],
   ['tradeos-financial-institution-onboarding-attestation', 4, 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts'],
   ['tradeos-financial-institution-transport-activation-plan', 4, 'tests/trade-protocols-financial-institution-transport-activation-plan.test.ts'],
+  ['tradeos-financial-institution-execution-authority', 4, 'tests/trade-protocols-financial-institution-execution-authority.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -68,6 +69,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'tradeos-citi-payment-settlement-binding',
     'tradeos-finance-connector-kit',
     'tradeos-financial-institution-binding-registry',
+    'tradeos-financial-institution-execution-authority',
     'tradeos-financial-institution-onboarding-attestation',
     'tradeos-financial-institution-transport-activation-plan',
     'tradeos-hsbc-payment-initiation-settlement-binding',
@@ -136,6 +138,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-citi-payment-settlement-binding', 6, 'tests/trade-protocols-citi-payment-settlement-binding.test.ts'],
     ['tradeos-financial-institution-onboarding-attestation', 4, 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts'],
     ['tradeos-financial-institution-transport-activation-plan', 4, 'tests/trade-protocols-financial-institution-transport-activation-plan.test.ts'],
+    ['tradeos-financial-institution-execution-authority', 4, 'tests/trade-protocols-financial-institution-execution-authority.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
