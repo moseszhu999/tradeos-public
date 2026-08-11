@@ -36,6 +36,7 @@ const targetCases = [
   ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
   ['tradeos-public-market-state-bridge', 5, 'tests/trade-public-market-state-bridge.test.ts'],
   ['tradeos-oracle-fusion-readonly-binding', 5, 'tests/trade-protocols-oracle-fusion-readonly-binding.test.ts'],
+  ['tradeos-sap-s4hana-readonly-binding', 4, 'tests/trade-protocols-sap-s4hana-readonly-binding.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -60,6 +61,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'tradeos-n2-work-source',
     'tradeos-oracle-fusion-readonly-binding',
     'tradeos-public-market-state-bridge',
+    'tradeos-sap-s4hana-readonly-binding',
     'tradeos-settlement-finance-interface',
     'tradeos-three-protocols',
     'vercel-release-decoupling',
@@ -109,6 +111,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
     ['tradeos-public-market-state-bridge', 5, 'tests/trade-public-market-state-bridge.test.ts'],
     ['tradeos-oracle-fusion-readonly-binding', 5, 'tests/trade-protocols-oracle-fusion-readonly-binding.test.ts'],
+    ['tradeos-sap-s4hana-readonly-binding', 4, 'tests/trade-protocols-sap-s4hana-readonly-binding.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
