@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-financial-binding-registry-c2886e4-focused-v1",
+  "target": "tradeos-financial-institution-binding-registry",
+  "privateExactSha": "c2886e4bf26c94b2e532963048e2fd940b7d2af6",
+  "expectedBaseSha": "de5be840003d897a7590ffeb7c665e3b70804577",
+  "expectedChangedFileCount": 6
+}
