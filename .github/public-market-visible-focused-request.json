@@ -1,7 +1,7 @@
 {
-  "requestId": "tradeos-three-protocols-dddb3196-focused-v1",
+  "requestId": "tradeos-three-protocols-62df07a3-focused-v2",
   "target": "tradeos-three-protocols",
-  "privateExactSha": "dddb3196d920a8327e8c8117d357f6e7d67b70a5",
+  "privateExactSha": "62df07a3db0f873bac683c02dafc87d4f8c37869",
   "expectedBaseSha": "dd162e184931e07a75f82fa0820dbc88ab2b225f",
   "expectedChangedFileCount": 10
 }
