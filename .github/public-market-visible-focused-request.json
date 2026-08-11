@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-kingdee-k3cloud-2e419d9-focused-v1",
+  "target": "tradeos-kingdee-k3cloud-readonly-binding",
+  "privateExactSha": "2e419d998e3233bafc45b897c00bf3cb60b0e7f7",
+  "expectedBaseSha": "49493a779927fec286997248a2aa23a70e8639c5",
+  "expectedChangedFileCount": 4
+}
