@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-onboarding-f9cd2bb-v1",
+  "target": "tradeos-financial-institution-binding-registry",
+  "privateExactSha": "f9cd2bb75e8b5f90ae92d6a8742673e1e852953e",
+  "expectedBaseSha": "8267eaa1e9b785da2e7a3bcd75ddafb6600e7a9a",
+  "expectedChangedFileCount": 4
+}
