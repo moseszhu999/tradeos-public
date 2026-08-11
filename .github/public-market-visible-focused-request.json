@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-hsbc-rf-2d6df6a-focused-v1",
+  "target": "tradeos-hsbc-receivables-finance-binding",
+  "privateExactSha": "2d6df6a555493641967dad90fcae8f9592970ec3",
+  "expectedBaseSha": "deb5810741f1ad95bfa912f928c1c3eaaeab99b4",
+  "expectedChangedFileCount": 4
+}
