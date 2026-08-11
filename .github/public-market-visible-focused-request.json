@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-provider-activation-outcome-8580a90-v1",
+  "target": "tradeos-financial-institution-provider-activation-outcome-observation",
+  "privateExactSha": "8580a9097879674f173596481a7b13d7f242435e",
+  "expectedBaseSha": "0bd7b80e99b4c9a6a90641299aff6116e8ac6c57",
+  "expectedChangedFileCount": 4
+}
