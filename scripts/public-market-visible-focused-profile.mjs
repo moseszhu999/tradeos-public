@@ -37,6 +37,7 @@ export const TARGETS = Object.freeze({
   'tradeos-financial-institution-onboarding-attestation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts' }),
   'tradeos-financial-institution-transport-activation-plan': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-transport-activation-plan.test.ts' }),
   'tradeos-financial-institution-execution-authority': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-execution-authority.test.ts' }),
+  'tradeos-financial-institution-execution-authority-replay-bound-assessment': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-execution-authority-replay-bound-assessment.test.ts' }),
   'tradeos-financial-institution-runtime-invocation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-runtime-invocation-envelope.test.ts' }),
 });
 
