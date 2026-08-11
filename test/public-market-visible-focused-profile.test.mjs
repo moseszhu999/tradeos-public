@@ -30,6 +30,7 @@ const targetCases = [
   ['first-principles-physical-bom', 4, 'tests/first-principles-physical-bom.test.ts'],
   ['first-principles-shadow-run', 5, 'tests/first-principles-shadow-run.test.ts'],
   ['first-principles-shadow-observation-adapter', 4, 'tests/first-principles-shadow-observation-adapter.test.ts'],
+  ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -50,6 +51,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'n3-a0-rfq-shared-case-preparation',
     'neon-business-empty-success',
     'tradeos-n2-work-source',
+    'tradeos-three-protocols',
     'vercel-release-decoupling',
   ]);
   assert.equal(TARGETS['market-watch-visible'].testFile, 'tests/trade-public-market-market-watch-visible-adapter.test.ts');
@@ -89,6 +91,17 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
   assert.deepEqual(shellPlan(observationAdapter)[1], [
     'npm',
     ['test', '--', 'tests/first-principles-shadow-observation-adapter.test.ts'],
+  ]);
+  const threeProtocols = validateRequest({
+    ...baseRequest,
+    target: 'tradeos-three-protocols',
+    expectedChangedFileCount: 10,
+  });
+  assert.deepEqual(shellPlan(threeProtocols), [
+    ['npm', ['ci', '--no-audit', '--no-fund']],
+    ['npm', ['test', '--', 'tests/trade-protocols-three-layer-core.test.ts']],
+    ['npm', ['run', 'typecheck']],
+    ['npm', ['run', 'build']],
   ]);
 });
 
