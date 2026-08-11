@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-hsbc-trade-loans-c966deb-focused-v1",
+  "target": "tradeos-hsbc-trade-loans-binding",
+  "privateExactSha": "c966deb6a992ad5f4e1f60144f4c5ca30f6a2a9f",
+  "expectedBaseSha": "63c83b1261857ee16f94cb4c8d037b828eb074d8",
+  "expectedChangedFileCount": 4
+}
