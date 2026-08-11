@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-authority-oracle-attestations-f34c242-focused-v1",
+  "target": "tradeos-authority-oracle-attestations",
+  "privateExactSha": "f34c2421a8d986958860cdb89ab2a924bfbf6d0e",
+  "expectedBaseSha": "e043617b9965cb167bbad75a432caaeb5054e8b9",
+  "expectedChangedFileCount": 5
+}
