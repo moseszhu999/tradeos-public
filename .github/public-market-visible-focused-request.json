@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-attestation-97fc835-v1",
+  "target": "tradeos-financial-institution-onboarding-attestation",
+  "privateExactSha": "97fc8356afa8156fdbb24bcf203ae9aef3b75c1c",
+  "expectedBaseSha": "e88c7eb133730def2f60c9027cc95c1839744dae",
+  "expectedChangedFileCount": 4
+}
