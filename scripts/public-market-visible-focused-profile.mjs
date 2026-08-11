@@ -25,6 +25,7 @@ export const TARGETS = Object.freeze({
   'tradeos-settlement-finance-interface': Object.freeze({ testFile: 'tests/trade-protocols-settlement-transport-finance-interface.test.ts' }),
   'tradeos-finance-connector-kit': Object.freeze({ testFile: 'tests/trade-protocols-finance-connector-kit.test.ts' }),
   'tradeos-authority-oracle-attestations': Object.freeze({ testFile: 'tests/trade-protocols-authority-oracle-attestations.test.ts' }),
+  'tradeos-public-market-state-bridge': Object.freeze({ testFile: 'tests/trade-public-market-state-bridge.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
