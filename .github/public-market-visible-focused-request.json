@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-settlement-finance-interface-6e5477c-focused-v1",
+  "target": "tradeos-settlement-finance-interface",
+  "privateExactSha": "6e5477cba77a1aa32e6c81643e95612cef00b10a",
+  "expectedBaseSha": "8a7a3182e9adf16222ae9bf593c8baaac46686fa",
+  "expectedChangedFileCount": 10
+}
