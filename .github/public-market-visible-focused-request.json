@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-oracle-fusion-e86227c-focused-v1",
+  "target": "tradeos-oracle-fusion-readonly-binding",
+  "privateExactSha": "e86227c9b1f8a13636d7ec44d5a25f32fc56c6b8",
+  "expectedBaseSha": "a154f1bbaf31177d6e8a56446e9f83ec81cb2a50",
+  "expectedChangedFileCount": 5
+}
