@@ -34,6 +34,7 @@ const targetCases = [
   ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
   ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
   ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
+  ['tradeos-public-market-state-bridge', 5, 'tests/trade-public-market-state-bridge.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -56,6 +57,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'tradeos-authority-oracle-attestations',
     'tradeos-finance-connector-kit',
     'tradeos-n2-work-source',
+    'tradeos-public-market-state-bridge',
     'tradeos-settlement-finance-interface',
     'tradeos-three-protocols',
     'vercel-release-decoupling',
@@ -103,6 +105,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
     ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
     ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
+    ['tradeos-public-market-state-bridge', 5, 'tests/trade-public-market-state-bridge.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
