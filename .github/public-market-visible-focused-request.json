@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-public-market-state-bridge-955d86f-focused-v1",
+  "target": "tradeos-public-market-state-bridge",
+  "privateExactSha": "955d86faa4f9e10a2bd40e9067c129251512cb7a",
+  "expectedBaseSha": "03070ba208ec5390c652b3d184441e9c59b2580c",
+  "expectedChangedFileCount": 5
+}
