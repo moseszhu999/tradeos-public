@@ -34,6 +34,7 @@ export const TARGETS = Object.freeze({
   'tradeos-hsbc-payment-initiation-settlement-binding': Object.freeze({ testFile: 'tests/trade-protocols-hsbc-payment-initiation-settlement-binding.test.ts' }),
   'tradeos-financial-institution-binding-registry': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-binding-registry.test.ts' }),
   'tradeos-citi-payment-settlement-binding': Object.freeze({ testFile: 'tests/trade-protocols-citi-payment-settlement-binding.test.ts' }),
+  'tradeos-financial-institution-onboarding-attestation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
