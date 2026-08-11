@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-business-authority-a67c20c-v1",
+  "target": "tradeos-financial-institution-business-operation-authority",
+  "privateExactSha": "a67c20c28ad8a12e17829024b1dceb3aec78af78",
+  "expectedBaseSha": "afe19e0d341f61fad26e7c5e9f665cc32e07f55a",
+  "expectedChangedFileCount": 4
+}
