@@ -46,6 +46,7 @@ const targetCases = [
   ['tradeos-financial-institution-onboarding-attestation', 4, 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts'],
   ['tradeos-financial-institution-transport-activation-plan', 4, 'tests/trade-protocols-financial-institution-transport-activation-plan.test.ts'],
   ['tradeos-financial-institution-execution-authority', 4, 'tests/trade-protocols-financial-institution-execution-authority.test.ts'],
+  ['tradeos-financial-institution-execution-authority-replay-bound-assessment', 4, 'tests/trade-protocols-financial-institution-execution-authority-replay-bound-assessment.test.ts'],
   ['tradeos-financial-institution-runtime-invocation', 4, 'tests/trade-protocols-financial-institution-runtime-invocation-envelope.test.ts'],
 ];
 
@@ -71,6 +72,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'tradeos-finance-connector-kit',
     'tradeos-financial-institution-binding-registry',
     'tradeos-financial-institution-execution-authority',
+    'tradeos-financial-institution-execution-authority-replay-bound-assessment',
     'tradeos-financial-institution-onboarding-attestation',
     'tradeos-financial-institution-runtime-invocation',
     'tradeos-financial-institution-transport-activation-plan',
@@ -141,6 +143,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-financial-institution-onboarding-attestation', 4, 'tests/trade-protocols-financial-institution-onboarding-attestation.test.ts'],
     ['tradeos-financial-institution-transport-activation-plan', 4, 'tests/trade-protocols-financial-institution-transport-activation-plan.test.ts'],
     ['tradeos-financial-institution-execution-authority', 4, 'tests/trade-protocols-financial-institution-execution-authority.test.ts'],
+    ['tradeos-financial-institution-execution-authority-replay-bound-assessment', 4, 'tests/trade-protocols-financial-institution-execution-authority-replay-bound-assessment.test.ts'],
     ['tradeos-financial-institution-runtime-invocation', 4, 'tests/trade-protocols-financial-institution-runtime-invocation-envelope.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
