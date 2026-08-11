@@ -31,6 +31,7 @@ export const TARGETS = Object.freeze({
   'tradeos-kingdee-k3cloud-readonly-binding': Object.freeze({ testFile: 'tests/trade-protocols-kingdee-k3cloud-readonly-binding.test.ts' }),
   'tradeos-hsbc-trade-loans-binding': Object.freeze({ testFile: 'tests/trade-protocols-hsbc-trade-finance-loans-binding.test.ts' }),
   'tradeos-hsbc-receivables-finance-binding': Object.freeze({ testFile: 'tests/trade-protocols-hsbc-receivables-finance-binding.test.ts' }),
+  'tradeos-hsbc-payment-initiation-settlement-binding': Object.freeze({ testFile: 'tests/trade-protocols-hsbc-payment-initiation-settlement-binding.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;

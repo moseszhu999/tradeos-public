@@ -40,6 +40,7 @@ const targetCases = [
   ['tradeos-kingdee-k3cloud-readonly-binding', 4, 'tests/trade-protocols-kingdee-k3cloud-readonly-binding.test.ts'],
   ['tradeos-hsbc-trade-loans-binding', 4, 'tests/trade-protocols-hsbc-trade-finance-loans-binding.test.ts'],
   ['tradeos-hsbc-receivables-finance-binding', 4, 'tests/trade-protocols-hsbc-receivables-finance-binding.test.ts'],
+  ['tradeos-hsbc-payment-initiation-settlement-binding', 4, 'tests/trade-protocols-hsbc-payment-initiation-settlement-binding.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -61,6 +62,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'neon-business-empty-success',
     'tradeos-authority-oracle-attestations',
     'tradeos-finance-connector-kit',
+    'tradeos-hsbc-payment-initiation-settlement-binding',
     'tradeos-hsbc-receivables-finance-binding',
     'tradeos-hsbc-trade-loans-binding',
     'tradeos-kingdee-k3cloud-readonly-binding',
@@ -121,6 +123,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-kingdee-k3cloud-readonly-binding', 4, 'tests/trade-protocols-kingdee-k3cloud-readonly-binding.test.ts'],
     ['tradeos-hsbc-trade-loans-binding', 4, 'tests/trade-protocols-hsbc-trade-finance-loans-binding.test.ts'],
     ['tradeos-hsbc-receivables-finance-binding', 4, 'tests/trade-protocols-hsbc-receivables-finance-binding.test.ts'],
+    ['tradeos-hsbc-payment-initiation-settlement-binding', 4, 'tests/trade-protocols-hsbc-payment-initiation-settlement-binding.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
