@@ -21,6 +21,7 @@ export const TARGETS = Object.freeze({
   'first-principles-physical-bom': Object.freeze({ testFile: 'tests/first-principles-physical-bom.test.ts' }),
   'first-principles-shadow-run': Object.freeze({ testFile: 'tests/first-principles-shadow-run.test.ts' }),
   'first-principles-shadow-observation-adapter': Object.freeze({ testFile: 'tests/first-principles-shadow-observation-adapter.test.ts' }),
+  'tradeos-three-protocols': Object.freeze({ testFile: 'tests/trade-protocols-three-layer-core.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
