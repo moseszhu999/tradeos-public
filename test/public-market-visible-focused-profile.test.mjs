@@ -42,6 +42,7 @@ const targetCases = [
   ['tradeos-hsbc-receivables-finance-binding', 4, 'tests/trade-protocols-hsbc-receivables-finance-binding.test.ts'],
   ['tradeos-hsbc-payment-initiation-settlement-binding', 4, 'tests/trade-protocols-hsbc-payment-initiation-settlement-binding.test.ts'],
   ['tradeos-financial-institution-binding-registry', 6, 'tests/trade-protocols-financial-institution-binding-registry.test.ts'],
+  ['tradeos-citi-payment-settlement-binding', 6, 'tests/trade-protocols-citi-payment-settlement-binding.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -62,6 +63,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'n3-a0-rfq-shared-case-preparation',
     'neon-business-empty-success',
     'tradeos-authority-oracle-attestations',
+    'tradeos-citi-payment-settlement-binding',
     'tradeos-finance-connector-kit',
     'tradeos-financial-institution-binding-registry',
     'tradeos-hsbc-payment-initiation-settlement-binding',
@@ -127,6 +129,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-hsbc-receivables-finance-binding', 4, 'tests/trade-protocols-hsbc-receivables-finance-binding.test.ts'],
     ['tradeos-hsbc-payment-initiation-settlement-binding', 4, 'tests/trade-protocols-hsbc-payment-initiation-settlement-binding.test.ts'],
     ['tradeos-financial-institution-binding-registry', 6, 'tests/trade-protocols-financial-institution-binding-registry.test.ts'],
+    ['tradeos-citi-payment-settlement-binding', 6, 'tests/trade-protocols-citi-payment-settlement-binding.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
