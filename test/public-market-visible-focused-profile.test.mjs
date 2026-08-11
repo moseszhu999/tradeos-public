@@ -51,6 +51,7 @@ const targetCases = [
   ['tradeos-financial-institution-provider-dispatch-observation', 4, 'tests/trade-protocols-financial-institution-provider-dispatch-observation.test.ts'],
   ['tradeos-financial-institution-provider-transport-outcome-observation', 4, 'tests/trade-protocols-financial-institution-provider-transport-outcome-observation.test.ts'],
   ['tradeos-financial-institution-provider-activation-outcome-observation', 4, 'tests/trade-protocols-financial-institution-provider-activation-outcome-observation.test.ts'],
+  ['tradeos-financial-institution-business-operation-authority', 4, 'tests/trade-protocols-financial-institution-business-operation-authority.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -74,6 +75,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'tradeos-citi-payment-settlement-binding',
     'tradeos-finance-connector-kit',
     'tradeos-financial-institution-binding-registry',
+    'tradeos-financial-institution-business-operation-authority',
     'tradeos-financial-institution-execution-authority',
     'tradeos-financial-institution-execution-authority-replay-bound-assessment',
     'tradeos-financial-institution-onboarding-attestation',
@@ -154,6 +156,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-financial-institution-provider-dispatch-observation', 4, 'tests/trade-protocols-financial-institution-provider-dispatch-observation.test.ts'],
     ['tradeos-financial-institution-provider-transport-outcome-observation', 4, 'tests/trade-protocols-financial-institution-provider-transport-outcome-observation.test.ts'],
     ['tradeos-financial-institution-provider-activation-outcome-observation', 4, 'tests/trade-protocols-financial-institution-provider-activation-outcome-observation.test.ts'],
+    ['tradeos-financial-institution-business-operation-authority', 4, 'tests/trade-protocols-financial-institution-business-operation-authority.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
