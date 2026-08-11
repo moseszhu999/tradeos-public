@@ -28,6 +28,7 @@ export const TARGETS = Object.freeze({
   'tradeos-public-market-state-bridge': Object.freeze({ testFile: 'tests/trade-public-market-state-bridge.test.ts' }),
   'tradeos-oracle-fusion-readonly-binding': Object.freeze({ testFile: 'tests/trade-protocols-oracle-fusion-readonly-binding.test.ts' }),
   'tradeos-sap-s4hana-readonly-binding': Object.freeze({ testFile: 'tests/trade-protocols-sap-s4hana-readonly-binding.test.ts' }),
+  'tradeos-kingdee-k3cloud-readonly-binding': Object.freeze({ testFile: 'tests/trade-protocols-kingdee-k3cloud-readonly-binding.test.ts' }),
 });
 
 const SHA40 = /^[0-9a-f]{40}$/;
