@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-hsbc-payment-6621411-focused-v1",
+  "target": "tradeos-hsbc-payment-initiation-settlement-binding",
+  "privateExactSha": "66214115ad8249ec2b7be9f00bf504ed5c1280f9",
+  "expectedBaseSha": "0420d93e45e6336771b8af92b2f9cce40b250d85",
+  "expectedChangedFileCount": 4
+}
