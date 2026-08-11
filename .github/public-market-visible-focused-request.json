@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-citi-payment-cc42022-focused-v1",
+  "target": "tradeos-citi-payment-settlement-binding",
+  "privateExactSha": "cc4202276c09f0977eed1f89f8b33f80cb466cdb",
+  "expectedBaseSha": "ec14dcb4083eb22b39a21796875fc7123ba942ae",
+  "expectedChangedFileCount": 6
+}
