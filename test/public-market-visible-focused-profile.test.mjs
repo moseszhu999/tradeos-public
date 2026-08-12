@@ -32,6 +32,7 @@ const targetCases = [
   ['first-principles-shadow-run', 5, 'tests/first-principles-shadow-run.test.ts'],
   ['first-principles-shadow-observation-adapter', 4, 'tests/first-principles-shadow-observation-adapter.test.ts'],
   ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
+  ['tradeos-agreement-backbone', 16, 'tests/trade-protocol-agreement'],
   ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
   ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
   ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
@@ -77,6 +78,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'n2-specification-sourcing-conversion',
     'n3-a0-rfq-shared-case-preparation',
     'neon-business-empty-success',
+    'tradeos-agreement-backbone',
     'tradeos-authority-oracle-attestations',
     'tradeos-citi-payment-settlement-binding',
     'tradeos-finance-connector-kit',
@@ -147,6 +149,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
   for (const [target, count, testFile] of [
     ['group-buyer-research-w3a', 3, 'tests/group-buyer-research-loop-w3a.test.ts'],
     ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
+    ['tradeos-agreement-backbone', 16, 'tests/trade-protocol-agreement'],
     ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
     ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
     ['tradeos-authority-oracle-attestations', 5, 'tests/trade-protocols-authority-oracle-attestations.test.ts'],
