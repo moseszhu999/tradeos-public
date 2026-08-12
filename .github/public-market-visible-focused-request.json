@@ -1,7 +1,7 @@
 {
-  "requestId": "base-sepolia-node-second-half-f390a66",
+  "requestId": "base-sepolia-node-second-half-guardfix-2f3078b",
   "target": "tradeos-base-sepolia-escrow-poc",
-  "privateExactSha": "f390a66ef2aefb676b9a137df3b852e73983f2cb",
+  "privateExactSha": "2f3078b7d7eb2201666e1dd8f843c1636fd5d03b",
   "expectedBaseSha": "6e83a7e4805c0ca3f8de02d5ba637d667db380fd",
   "expectedChangedFileCount": 8
 }
