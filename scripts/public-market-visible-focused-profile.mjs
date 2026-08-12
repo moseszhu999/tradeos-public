@@ -99,7 +99,7 @@ export function validateRequest(value) {
 
 export function shellPlan(request) {
   const focusedStage = request.testRunner === 'hardhat'
-    ? Object.freeze(['npm', ['run', 'contracts:test', '--', request.testFile]])
+    ? Object.freeze(['npm', ['run', 'contracts:test:node', '--', request.testFile]])
     : Object.freeze(['npm', ['test', '--', request.testFile]]);
   return Object.freeze([
     Object.freeze(['npm', ['ci', '--no-audit', '--no-fund']]),
