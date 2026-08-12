@@ -109,6 +109,7 @@ jobs:
           cd private-repo
           passed=0
           failure=NONE
+          failure_detail=NONE
           dependency_lock=repository_lock
 
           if [[ ! -f package-lock.json ]]; then
@@ -148,8 +149,26 @@ jobs:
           if [[ "$failure" == NONE ]]; then run_stage typecheck npm run typecheck || true; fi
           if [[ "$failure" == NONE ]]; then run_stage build npm run build || true; fi
 
+          if [[ "$failure" == focused-test && "$TEST_RUNNER" == hardhat ]]; then
+            log="$RUNNER_TEMP/visible-focused-test.log"
+            if grep -Eqi 'VERSION_LIST_DOWNLOAD_FAILED|Failed to download the list of solc builds|compiler version list|binaries\.soliditylang\.org' "$log"; then
+              failure_detail=compiler-list-download
+            elif grep -Eqi 'COMPILER_DOWNLOAD_FAILED|Failed to download compiler|download or verification failed for solc|compiler download' "$log"; then
+              failure_detail=compiler-download
+            elif grep -Eqi 'ParserError:|TypeError:|DeclarationError:|CompilerError:|Stack too deep|Compilation failed|Solidity compilation' "$log"; then
+              failure_detail=solidity-compile
+            elif grep -Eqi 'AssertionError|not ok|test failed|tests failed|No tests found' "$log"; then
+              failure_detail=node-test
+            else
+              failure_detail=hardhat-focused-other
+            fi
+          elif [[ "$failure" != NONE ]]; then
+            failure_detail="$failure"
+          fi
+
           echo "passed=$passed" >> "$GITHUB_OUTPUT"
           echo "failure=$failure" >> "$GITHUB_OUTPUT"
+          echo "failure_detail=$failure_detail" >> "$GITHUB_OUTPUT"
           echo "dependency_lock=$dependency_lock" >> "$GITHUB_OUTPUT"
           if [[ "$failure" == NONE && "$passed" -eq 4 ]]; then
             echo "verdict=PASS" >> "$GITHUB_OUTPUT"
@@ -169,12 +188,13 @@ jobs:
           CHANGED_COUNT: ${{ steps.scope.outputs.changed_count }}
           PASSED: ${{ steps.profile.outputs.passed }}
           FAILURE: ${{ steps.profile.outputs.failure }}
+          FAILURE_DETAIL: ${{ steps.profile.outputs.failure_detail }}
           DEPENDENCY_LOCK: ${{ steps.profile.outputs.dependency_lock }}
           VERDICT: ${{ steps.profile.outputs.verdict }}
         run: |
           printf '## tradeOS Public Market visible focused CI\n\n' >> "$GITHUB_STEP_SUMMARY"
-          printf -- '- Request: `%s`\n- Target: **%s**\n- Private exact head: `%s`\n- Merge base: `%s`\n- Changed files: **%s**\n- Dependency lock: **%s**\n- Fixed stages: **%s/4**\n- Failure stage: **%s**\n- Final verdict: **%s**\n' "$REQUEST_ID" "$TARGET" "$PRIVATE_SHA" "$BASE_SHA" "$CHANGED_COUNT" "$DEPENDENCY_LOCK" "$PASSED" "$FAILURE" "$VERDICT" >> "$GITHUB_STEP_SUMMARY"
-          echo "TRADEOS_VISIBLE_FOCUSED target=$TARGET verdict=$VERDICT dependency_lock=$DEPENDENCY_LOCK failure_stage=$FAILURE passed=$PASSED/4"
+          printf -- '- Request: `%s`\n- Target: **%s**\n- Private exact head: `%s`\n- Merge base: `%s`\n- Changed files: **%s**\n- Dependency lock: **%s**\n- Fixed stages: **%s/4**\n- Failure stage: **%s**\n- Failure detail: **%s**\n- Final verdict: **%s**\n' "$REQUEST_ID" "$TARGET" "$PRIVATE_SHA" "$BASE_SHA" "$CHANGED_COUNT" "$DEPENDENCY_LOCK" "$PASSED" "$FAILURE" "$FAILURE_DETAIL" "$VERDICT" >> "$GITHUB_STEP_SUMMARY"
+          echo "TRADEOS_VISIBLE_FOCUSED target=$TARGET verdict=$VERDICT dependency_lock=$DEPENDENCY_LOCK failure_stage=$FAILURE failure_detail=$FAILURE_DETAIL passed=$PASSED/4"
 
       - name: Comment sanitized verdict on carrier PR
         if: always()
@@ -187,6 +207,7 @@ jobs:
           DEPENDENCY_LOCK: ${{ steps.profile.outputs.dependency_lock }}
           PASSED: ${{ steps.profile.outputs.passed }}
           FAILURE: ${{ steps.profile.outputs.failure }}
+          FAILURE_DETAIL: ${{ steps.profile.outputs.failure_detail }}
           VERDICT: ${{ steps.profile.outputs.verdict }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
@@ -202,9 +223,10 @@ jobs:
               `- Dependency lock: **${process.env.DEPENDENCY_LOCK || 'NOT_RUN'}**`,
               `- Fixed stages: **${process.env.PASSED || '0'}/4**`,
               `- Failure stage: **${process.env.FAILURE || 'NOT_RUN'}**`,
+              `- Failure detail: **${process.env.FAILURE_DETAIL || 'NOT_RUN'}**`,
               `- Final verdict: **${process.env.VERDICT || 'NOT_RUN'}**`,
               '',
-              'Raw private output stayed runner-local and sealed. No deployment, migration, database write, persistence, publication, notification or external action was performed.',
+              'Raw private output stayed runner-local and sealed. Only the bounded failure-detail enum may be surfaced. No deployment, migration, database write, persistence, publication, notification or external action was performed.',
             ].join('\n');
             await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body });
 
