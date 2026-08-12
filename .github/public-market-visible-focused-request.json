@@ -1,7 +1,7 @@
 {
-  "requestId": "base-sepolia-solidity-stubs-detail-da01e23",
+  "requestId": "base-sepolia-local-solc-b0156fc",
   "target": "tradeos-base-sepolia-escrow-poc",
-  "privateExactSha": "da01e230a3cbe2f1affc6e2b41b509869db8b3af",
+  "privateExactSha": "b0156fc7b657e7f0ceb1859ac1618fa7677ef95f",
   "expectedBaseSha": "6e83a7e4805c0ca3f8de02d5ba637d667db380fd",
   "expectedChangedFileCount": 8
 }
