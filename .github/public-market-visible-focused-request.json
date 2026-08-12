@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-agreement-backbone-183e4ca-v1",
+  "target": "tradeos-three-protocols",
+  "privateExactSha": "183e4ca5ef0b2d1aa53a935dc281fdd19d5255f5",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 8
+}
