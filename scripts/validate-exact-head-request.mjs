@@ -22,6 +22,7 @@ const PROFILES = new Set([
   'workbuddy-integration',
   'web-product',
   'main-release',
+  'p4-3-tradeos-aiexe-pre-dispatch',
 ]);
 
 function requireExactKeys(value, allowed) {
