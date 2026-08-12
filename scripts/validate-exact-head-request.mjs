@@ -22,6 +22,7 @@ const PROFILES = new Set([
   'workbuddy-integration',
   'web-product',
   'main-release',
+  'agent-l0-mcp-tool-contract',
 ]);
 
 function requireExactKeys(value, allowed) {
