@@ -22,6 +22,7 @@ export const TARGETS = Object.freeze({
   'first-principles-shadow-run': Object.freeze({ testFile: 'tests/first-principles-shadow-run.test.ts' }),
   'first-principles-shadow-observation-adapter': Object.freeze({ testFile: 'tests/first-principles-shadow-observation-adapter.test.ts' }),
   'tradeos-three-protocols': Object.freeze({ testFile: 'tests/trade-protocols-three-layer-core.test.ts' }),
+  'tradeos-agreement-backbone': Object.freeze({ testFile: 'tests/trade-protocol-agreement' }),
   'tradeos-settlement-finance-interface': Object.freeze({ testFile: 'tests/trade-protocols-settlement-transport-finance-interface.test.ts' }),
   'tradeos-finance-connector-kit': Object.freeze({ testFile: 'tests/trade-protocols-finance-connector-kit.test.ts' }),
   'tradeos-authority-oracle-attestations': Object.freeze({ testFile: 'tests/trade-protocols-authority-oracle-attestations.test.ts' }),
