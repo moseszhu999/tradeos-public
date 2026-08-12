@@ -67,7 +67,7 @@ export function validateRequest(value) {
   if (!Object.hasOwn(TARGETS, value.target)) throw new Error('visible_focused_target_invalid');
   if (!SHA40.test(value.privateExactSha ?? '')) throw new Error('visible_focused_private_sha_invalid');
   if (!SHA40.test(value.expectedBaseSha ?? '')) throw new Error('visible_focused_base_sha_invalid');
-  if (!Number.isInteger(value.expectedChangedFileCount) || value.expectedChangedFileCount < 1 || value.expectedChangedFileCount > 20) {
+  if (!Number.isInteger(value.expectedChangedFileCount) || value.expectedChangedFileCount < 1 || value.expectedChangedFileCount > 30) {
     throw new Error('visible_focused_changed_file_count_invalid');
   }
   return Object.freeze({
