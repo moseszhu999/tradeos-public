@@ -20,6 +20,7 @@ const targetCases = [
   ['business-channel-contracts', 4, 'tests/business-channel-contracts.test.ts'],
   ['bottom-up-cockpit', 2, 'tests/trade-bottom-up-cockpit.test.ts'],
   ['vercel-release-decoupling', 2, 'tests/vercel-production-deploy-decoupling.test.ts'],
+  ['group-buyer-research-w3a', 3, 'tests/group-buyer-research-loop-w3a.test.ts'],
   ['group-work-inbox', 3, 'tests/group-work-entry-work-inbox.test.ts'],
   ['group-work-provider-transport', 3, 'tests/group-work-entry-provider-transport.test.ts'],
   ['tradeos-n2-work-source', 6, 'tests/group-work-entry-tradeos-proposal-work-source.test.ts'],
@@ -66,6 +67,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'first-principles-proof-pack',
     'first-principles-shadow-observation-adapter',
     'first-principles-shadow-run',
+    'group-buyer-research-w3a',
     'group-work-inbox',
     'group-work-provider-transport',
     'market-shared-case-proposal',
@@ -139,6 +141,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['test', '--', 'tests/first-principles-shadow-observation-adapter.test.ts'],
   ]);
   for (const [target, count, testFile] of [
+    ['group-buyer-research-w3a', 3, 'tests/group-buyer-research-loop-w3a.test.ts'],
     ['tradeos-three-protocols', 10, 'tests/trade-protocols-three-layer-core.test.ts'],
     ['tradeos-settlement-finance-interface', 10, 'tests/trade-protocols-settlement-transport-finance-interface.test.ts'],
     ['tradeos-finance-connector-kit', 9, 'tests/trade-protocols-finance-connector-kit.test.ts'],
