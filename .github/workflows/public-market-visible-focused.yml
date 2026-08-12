@@ -67,6 +67,7 @@ jobs:
           line('base_sha', request.expectedBaseSha);
           line('changed_count', request.expectedChangedFileCount);
           line('test_file', request.testFile);
+          line('test_runner', request.testRunner);
           NODE
 
       - name: Check out exact private head read-only
@@ -102,6 +103,7 @@ jobs:
         shell: bash
         env:
           TEST_FILE: ${{ steps.request.outputs.test_file }}
+          TEST_RUNNER: ${{ steps.request.outputs.test_runner }}
         run: |
           set +e
           cd private-repo
@@ -130,7 +132,19 @@ jobs:
           }
 
           if [[ "$failure" == NONE ]]; then run_stage npm-ci npm ci --no-audit --no-fund || true; fi
-          if [[ "$failure" == NONE ]]; then run_stage focused-test npm test -- "$TEST_FILE" || true; fi
+          if [[ "$failure" == NONE ]]; then
+            case "$TEST_RUNNER" in
+              vitest)
+                run_stage focused-test npm test -- "$TEST_FILE" || true
+                ;;
+              hardhat)
+                run_stage focused-test npm run contracts:test -- "$TEST_FILE" || true
+                ;;
+              *)
+                failure=focused-runner-invalid
+                ;;
+            esac
+          fi
           if [[ "$failure" == NONE ]]; then run_stage typecheck npm run typecheck || true; fi
           if [[ "$failure" == NONE ]]; then run_stage build npm run build || true; fi
 
