@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-provider-acknowledgement-7e6d856-v1",
+  "target": "tradeos-financial-institution-business-operation-provider-acknowledgement",
+  "privateExactSha": "7e6d856afaf2db54bf92deb7cba4090e2fb593c9",
+  "expectedBaseSha": "9732af8188dc269de18fa3ab58a9b351ef5adafb",
+  "expectedChangedFileCount": 4
+}
