@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-business-runtime-invocation-73e08fd-v1",
+  "target": "tradeos-financial-institution-business-operation-runtime-invocation",
+  "privateExactSha": "73e08fd5fb83770218a32a35d0c8710dd2d2c24c",
+  "expectedBaseSha": "dbab474848a892a85f550cc96d18fb80efa43879",
+  "expectedChangedFileCount": 4
+}
