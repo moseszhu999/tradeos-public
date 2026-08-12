@@ -2,10 +2,13 @@ import { appendFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
 const PROFILE = 'agent-l0-mcp-tool-contract';
-const TEST_FILE = 'tests/tradeos-agent-l0-mcp-tool-contracts.test.ts';
+const TEST_FILES = Object.freeze([
+  'tests/tradeos-agent-l0-mcp-tool-contracts.test.ts',
+  'tests/tradeos-agent-l0-canonical-read-models.test.ts',
+]);
 const COMMANDS = Object.freeze([
   Object.freeze({ name: 'npm:ci', command: 'npm', args: Object.freeze(['ci', '--no-audit', '--no-fund']) }),
-  Object.freeze({ name: 'npm:focused-test', command: 'npm', args: Object.freeze(['test', '--', TEST_FILE]) }),
+  Object.freeze({ name: 'npm:focused-test', command: 'npm', args: Object.freeze(['test', '--', ...TEST_FILES]) }),
   Object.freeze({ name: 'npm:typecheck', command: 'npm', args: Object.freeze(['run', 'typecheck']) }),
 ]);
 
