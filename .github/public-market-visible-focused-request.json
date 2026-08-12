@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-case-0077754",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "0077754003bf087bda6b14cd75a4c1b16197cb40",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 28
+}
