@@ -51,11 +51,27 @@ export const TARGETS = Object.freeze({
   'group-buyer-research-w3a': Object.freeze({ testFile: 'tests/group-buyer-research-loop-w3a.test.ts' }),
 });
 
+export const HARDHAT_TARGETS = Object.freeze({
+  'tradeos-base-sepolia-escrow-poc': Object.freeze({
+    testFile: 'test/TradeOSBaseSepoliaEscrowPoc.ts',
+  }),
+});
+
 const SHA40 = /^[0-9a-f]{40}$/;
 const REQUEST_ID = /^[a-z0-9][a-z0-9-]{2,63}$/;
 
 function isRecord(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function targetConfig(target) {
+  if (Object.hasOwn(TARGETS, target)) {
+    return Object.freeze({ runner: 'vitest', testFile: TARGETS[target].testFile });
+  }
+  if (Object.hasOwn(HARDHAT_TARGETS, target)) {
+    return Object.freeze({ runner: 'hardhat', testFile: HARDHAT_TARGETS[target].testFile });
+  }
+  throw new Error('visible_focused_target_invalid');
 }
 
 export function validateRequest(value) {
@@ -64,7 +80,7 @@ export function validateRequest(value) {
   const keys = Object.keys(value).sort();
   if (JSON.stringify(keys) !== JSON.stringify(expectedKeys)) throw new Error('visible_focused_request_shape_invalid');
   if (!REQUEST_ID.test(value.requestId ?? '')) throw new Error('visible_focused_request_id_invalid');
-  if (!Object.hasOwn(TARGETS, value.target)) throw new Error('visible_focused_target_invalid');
+  const config = targetConfig(value.target);
   if (!SHA40.test(value.privateExactSha ?? '')) throw new Error('visible_focused_private_sha_invalid');
   if (!SHA40.test(value.expectedBaseSha ?? '')) throw new Error('visible_focused_base_sha_invalid');
   if (!Number.isInteger(value.expectedChangedFileCount) || value.expectedChangedFileCount < 1 || value.expectedChangedFileCount > 30) {
@@ -76,14 +92,18 @@ export function validateRequest(value) {
     privateExactSha: value.privateExactSha,
     expectedBaseSha: value.expectedBaseSha,
     expectedChangedFileCount: value.expectedChangedFileCount,
-    testFile: TARGETS[value.target].testFile,
+    testFile: config.testFile,
+    testRunner: config.runner,
   });
 }
 
 export function shellPlan(request) {
+  const focusedStage = request.testRunner === 'hardhat'
+    ? Object.freeze(['npm', ['run', 'contracts:test', '--', request.testFile]])
+    : Object.freeze(['npm', ['test', '--', request.testFile]]);
   return Object.freeze([
     Object.freeze(['npm', ['ci', '--no-audit', '--no-fund']]),
-    Object.freeze(['npm', ['test', '--', request.testFile]]),
+    focusedStage,
     Object.freeze(['npm', ['run', 'typecheck']]),
     Object.freeze(['npm', ['run', 'build']]),
   ]);
@@ -104,6 +124,7 @@ if (process.argv[1]?.endsWith('public-market-visible-focused-profile.mjs')) {
       expectedBaseSha: request.expectedBaseSha,
       expectedChangedFileCount: request.expectedChangedFileCount,
       testFile: request.testFile,
+      testRunner: request.testRunner,
       commands: shellPlan(request),
       deploymentPerformed: false,
       databaseWritePerformed: false,
