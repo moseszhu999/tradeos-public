@@ -53,6 +53,7 @@ const targetCases = [
   ['tradeos-financial-institution-provider-activation-outcome-observation', 4, 'tests/trade-protocols-financial-institution-provider-activation-outcome-observation.test.ts'],
   ['tradeos-financial-institution-business-operation-authority', 4, 'tests/trade-protocols-financial-institution-business-operation-authority.test.ts'],
   ['tradeos-financial-institution-business-operation-execution-binding', 4, 'tests/trade-protocols-financial-institution-business-operation-execution-binding.test.ts'],
+  ['tradeos-financial-institution-business-operation-runtime-invocation', 4, 'tests/trade-protocols-financial-institution-business-operation-runtime-invocation.test.ts'],
 ];
 
 test('locks focused targets to explicitly owned private test files', () => {
@@ -78,6 +79,7 @@ test('locks focused targets to explicitly owned private test files', () => {
     'tradeos-financial-institution-binding-registry',
     'tradeos-financial-institution-business-operation-authority',
     'tradeos-financial-institution-business-operation-execution-binding',
+    'tradeos-financial-institution-business-operation-runtime-invocation',
     'tradeos-financial-institution-execution-authority',
     'tradeos-financial-institution-execution-authority-replay-bound-assessment',
     'tradeos-financial-institution-onboarding-attestation',
@@ -160,6 +162,7 @@ test('fixed shell plan runs install, one focused test filter, typecheck and buil
     ['tradeos-financial-institution-provider-activation-outcome-observation', 4, 'tests/trade-protocols-financial-institution-provider-activation-outcome-observation.test.ts'],
     ['tradeos-financial-institution-business-operation-authority', 4, 'tests/trade-protocols-financial-institution-business-operation-authority.test.ts'],
     ['tradeos-financial-institution-business-operation-execution-binding', 4, 'tests/trade-protocols-financial-institution-business-operation-execution-binding.test.ts'],
+    ['tradeos-financial-institution-business-operation-runtime-invocation', 4, 'tests/trade-protocols-financial-institution-business-operation-runtime-invocation.test.ts'],
   ]) {
     const parsed = validateRequest({ ...baseRequest, target, expectedChangedFileCount: count });
     assert.deepEqual(shellPlan(parsed), [
