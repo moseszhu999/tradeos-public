@@ -31,11 +31,11 @@ test('locks the Base Sepolia escrow PoC to one Hardhat-owned private test file',
   assert.equal(request.expectedChangedFileCount, 8);
 });
 
-test('Hardhat target keeps the same four fixed sealed stages with a contract-test focused stage', () => {
+test('Hardhat target keeps the same four fixed sealed stages and uses the nodejs test-file subtask', () => {
   const request = validateRequest(requestInput);
   assert.deepEqual(shellPlan(request), [
     ['npm', ['ci', '--no-audit', '--no-fund']],
-    ['npm', ['run', 'contracts:test', '--', 'test/TradeOSBaseSepoliaEscrowPoc.ts']],
+    ['npm', ['run', 'contracts:test:node', '--', 'test/TradeOSBaseSepoliaEscrowPoc.ts']],
     ['npm', ['run', 'typecheck']],
     ['npm', ['run', 'build']],
   ]);
@@ -45,7 +45,7 @@ test('trusted workflow dispatches only explicit vitest or hardhat runners and ne
   assert.match(workflow, /case \"\$TEST_RUNNER\" in/);
   assert.match(workflow, /vitest\)/);
   assert.match(workflow, /hardhat\)/);
-  assert.match(workflow, /npm run contracts:test -- \"\$TEST_FILE\"/);
+  assert.match(workflow, /npm run contracts:test:node -- \"\$TEST_FILE\"/);
   assert.match(workflow, /failure=focused-runner-invalid/);
   assert.doesNotMatch(workflow, /contracts:deploy:base-sepolia:escrow-poc/);
   assert.doesNotMatch(workflow, /BASE_SEPOLIA_PRIVATE_KEY/);
