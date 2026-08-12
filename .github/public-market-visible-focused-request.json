@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-business-execution-binding-436ef55-v1",
+  "target": "tradeos-financial-institution-business-operation-execution-binding",
+  "privateExactSha": "436ef551e93b28b3a3888f067eaea46af2953ed7",
+  "expectedBaseSha": "80fe7f95f0064004a048dbba57def4ea90deda80",
+  "expectedChangedFileCount": 4
+}
