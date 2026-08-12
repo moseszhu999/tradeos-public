@@ -1,0 +1,7 @@
+{
+  "requestId": "tradeos-fi-business-dispatch-observation-c62bcc1-v2",
+  "target": "tradeos-financial-institution-business-operation-dispatch-observation",
+  "privateExactSha": "c62bcc1e2b37c9d99c94e617bd07c5bee582550a",
+  "expectedBaseSha": "02b9ad4ce8857fdc51279c6b6718f247cb6e82eb",
+  "expectedChangedFileCount": 4
+}
