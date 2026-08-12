@@ -46,6 +46,7 @@ export const TARGETS = Object.freeze({
   'tradeos-financial-institution-business-operation-execution-binding': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-business-operation-execution-binding.test.ts' }),
   'tradeos-financial-institution-business-operation-runtime-invocation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-business-operation-runtime-invocation.test.ts' }),
   'tradeos-financial-institution-business-operation-dispatch-observation': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-business-operation-dispatch-observation.test.ts' }),
+  'tradeos-financial-institution-business-operation-provider-acknowledgement': Object.freeze({ testFile: 'tests/trade-protocols-financial-institution-business-operation-provider-acknowledgement-observation.test.ts' }),
   'group-buyer-research-w3a': Object.freeze({ testFile: 'tests/group-buyer-research-loop-w3a.test.ts' }),
 });
 
