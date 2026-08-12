@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-registry-8f49099",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "8f490999faa55e76b870ca8c2c1162b3c7c2ffec",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 26
+}
