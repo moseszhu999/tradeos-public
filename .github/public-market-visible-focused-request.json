@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-capital-538b669",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "538b669743d88b96e11370775130157e56cb1fbc",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 24
+}
