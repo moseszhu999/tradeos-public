@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-amendment-fb9bcf1",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "fb9bcf17f9397acb7634bf129b3d6bcef42e5005",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 18
+}
