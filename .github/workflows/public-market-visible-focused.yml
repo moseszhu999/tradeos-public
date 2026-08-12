@@ -138,7 +138,7 @@ jobs:
                 run_stage focused-test npm test -- "$TEST_FILE" || true
                 ;;
               hardhat)
-                run_stage focused-test npm run contracts:test -- "$TEST_FILE" || true
+                run_stage focused-test npm run contracts:test:node -- "$TEST_FILE" || true
                 ;;
               *)
                 failure=focused-runner-invalid
