@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-escrow-pilot-4d44dfa",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "4d44dfa94dcf2e2fbcec83ae02c9b893caaf4c4c",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 30
+}
