@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-commerce-88309f6",
+  "target": "tradeos-three-protocols",
+  "privateExactSha": "88309f69b8261f79e21c2bb946dd41142d46fdcb",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 12
+}
