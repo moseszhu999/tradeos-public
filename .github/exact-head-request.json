@@ -1,0 +1,8 @@
+{
+  "requestId": "tradeos-agent-l0-canonical-153e05d",
+  "privateExactSha": "153e05da99062e3c18c70e84f7433cd9cf153526",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedMainSha": "",
+  "validationProfile": "agent-l0-mcp-tool-contract",
+  "expectedChangedFileCount": 9
+}
