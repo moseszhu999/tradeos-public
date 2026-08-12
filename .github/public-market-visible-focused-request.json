@@ -1,0 +1,7 @@
+{
+  "requestId": "agreement-confirmation-182ea1d",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "182ea1dd745f0d0e255f9aa2cf378fb6206f1680",
+  "expectedBaseSha": "94691484e567ff5694dd25ef8737a926b8aa85da",
+  "expectedChangedFileCount": 20
+}
