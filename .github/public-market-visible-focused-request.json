@@ -1,0 +1,7 @@
+{
+  "requestId": "signature-attestation-72bf4cc",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "72bf4cc622933854cf52bf0ee5815e63f61518d6",
+  "expectedBaseSha": "578b3acda3dd60e014365e2ebfa6a47e882d0fb1",
+  "expectedChangedFileCount": 4
+}
