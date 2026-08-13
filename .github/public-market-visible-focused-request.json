@@ -1,0 +1,7 @@
+{
+  "requestId": "ai-governed-execution-5183171",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "5183171984dc440564f5130846f2f412cb949273",
+  "expectedBaseSha": "d74c3105fb6e99e584d97d2a7c3be44591755c63",
+  "expectedChangedFileCount": 4
+}
