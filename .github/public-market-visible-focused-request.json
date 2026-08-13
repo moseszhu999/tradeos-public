@@ -1,0 +1,7 @@
+{
+  "requestId": "testnet-effect-gate-a3ae03a",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "a3ae03a21d322ae5e5c6e53fed37405ca3ea740a",
+  "expectedBaseSha": "cbe10eb59572e080f535fead5e27859965bdf762",
+  "expectedChangedFileCount": 4
+}
