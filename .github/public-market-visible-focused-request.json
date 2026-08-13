@@ -1,0 +1,7 @@
+{
+  "requestId": "principal-bound-broadcast-cf344c8",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "cf344c839e71c549e8fefa1ba56b8df97d864a26",
+  "expectedBaseSha": "048115b1c3dd9ad37effb65ab21a324a47dd3cac",
+  "expectedChangedFileCount": 3
+}
