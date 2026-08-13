@@ -1,0 +1,7 @@
+{
+  "requestId": "agent-registration-259a71a",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "259a71a3e1f391ce2a71161e75d8c4aa64d07640",
+  "expectedBaseSha": "cf344c839e71c549e8fefa1ba56b8df97d864a26",
+  "expectedChangedFileCount": 2
+}
