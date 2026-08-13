@@ -1,0 +1,7 @@
+{
+  "requestId": "agent-principal-048115b",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "048115b1c3dd9ad37effb65ab21a324a47dd3cac",
+  "expectedBaseSha": "da80a327f6f78e08c87240de01bbf989cc56f47a",
+  "expectedChangedFileCount": 4
+}
