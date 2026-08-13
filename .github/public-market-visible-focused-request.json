@@ -1,0 +1,7 @@
+{
+  "requestId": "intent-governance-a0ab028",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "a0ab028ef72a80c4d18887a3ec83c4970d9a60d3",
+  "expectedBaseSha": "6e83a7e4805c0ca3f8de02d5ba637d667db380fd",
+  "expectedChangedFileCount": 11
+}
