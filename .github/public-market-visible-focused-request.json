@@ -1,0 +1,7 @@
+{
+  "requestId": "agent-charter-8c6b501",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "8c6b5018f436d87fa0671a86f1382d4c08213e84",
+  "expectedBaseSha": "72bf4cc622933854cf52bf0ee5815e63f61518d6",
+  "expectedChangedFileCount": 4
+}
