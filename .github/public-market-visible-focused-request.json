@@ -1,0 +1,7 @@
+{
+  "requestId": "signer-handoff-578b3ac",
+  "target": "tradeos-agreement-backbone",
+  "privateExactSha": "578b3acda3dd60e014365e2ebfa6a47e882d0fb1",
+  "expectedBaseSha": "5e2e7b8ce65bc1151d7e472c133470b22aaf756d",
+  "expectedChangedFileCount": 4
+}
