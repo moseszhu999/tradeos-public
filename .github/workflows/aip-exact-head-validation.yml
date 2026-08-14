@@ -1,0 +1,159 @@
+name: ai-native-platform exact-head sealed validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/aip-exact-head-validation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      PRIVATE_EXACT_SHA: ed1964f1e958e0ff81f52ec27936c1119a21d7b4
+      EXPECTED_BASE_SHA: b99134f44e4fb32b4d2745979808c8b5ecdaafa0
+    steps:
+      - name: Check out carrier
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Validate private read credential
+        id: credential
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+        run: |
+          if [[ -n "$PRIVATE_TOKEN" ]]; then
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          else
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out exact private head
+        id: checkout
+        if: steps.credential.outputs.status == 'PASS'
+        uses: actions/checkout@v4
+        with:
+          repository: moseszhu999/ai-native-platform
+          ref: ${{ env.PRIVATE_EXACT_SHA }}
+          token: ${{ secrets.PRIVATE_REPO_READ_TOKEN }}
+          path: private-repo
+          persist-credentials: false
+          fetch-depth: 0
+          clean: true
+
+      - name: Verify exact scope
+        id: scope
+        if: steps.checkout.outcome == 'success'
+        shell: bash
+        run: |
+          set +e
+          cd private-repo
+          actual="$(git rev-parse HEAD 2>/dev/null)"
+          if [[ "$actual" != "$PRIVATE_EXACT_SHA" ]]; then
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git merge-base --is-ancestor "$EXPECTED_BASE_SHA" "$PRIVATE_EXACT_SHA" 2>/dev/null; then
+            count="$(git diff --name-only "$EXPECTED_BASE_SHA...$PRIVATE_EXACT_SHA" | wc -l | tr -d ' ')"
+            echo "changed_file_count=$count" >> "$GITHUB_OUTPUT"
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          else
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: Set up Node.js
+        if: steps.scope.outputs.status == 'PASS'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: private-repo/package-lock.json
+
+      - name: Run sealed fixed profile
+        id: profile
+        if: steps.scope.outputs.status == 'PASS'
+        shell: bash
+        run: |
+          set +e
+          cd private-repo
+          passed=0
+          total=5
+          failure=NONE
+          run_stage() {
+            name="$1"; shift
+            "$@" > "$RUNNER_TEMP/aip-${name}.log" 2>&1
+            code=$?
+            if [[ "$code" == 0 ]]; then
+              passed=$((passed+1))
+              return 0
+            fi
+            failure="$name"
+            return 1
+          }
+          run_stage npm-ci npm ci || true
+          if [[ "$failure" == NONE ]]; then run_stage test npm test || true; fi
+          if [[ "$failure" == NONE ]]; then run_stage lint npm run lint || true; fi
+          if [[ "$failure" == NONE ]]; then run_stage typecheck npm run typecheck || true; fi
+          if [[ "$failure" == NONE ]]; then run_stage build npm run build || true; fi
+          echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          echo "total=$total" >> "$GITHUB_OUTPUT"
+          echo "failure_stage=$failure" >> "$GITHUB_OUTPUT"
+          if [[ "$failure" == NONE ]]; then
+            echo 'status=PASS' >> "$GITHUB_OUTPUT"
+          else
+            echo 'status=FAIL' >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: Publish sanitized verdict
+        if: always()
+        shell: bash
+        env:
+          CREDENTIAL: ${{ steps.credential.outputs.status }}
+          CHECKOUT: ${{ steps.checkout.outcome }}
+          SCOPE: ${{ steps.scope.outputs.status }}
+          CHANGED: ${{ steps.scope.outputs.changed_file_count }}
+          PROFILE: ${{ steps.profile.outputs.status }}
+          PASSED: ${{ steps.profile.outputs.passed }}
+          TOTAL: ${{ steps.profile.outputs.total }}
+          FAILURE: ${{ steps.profile.outputs.failure_stage }}
+        run: |
+          {
+            echo '## ai-native-platform sealed exact-head validation'
+            echo
+            echo "- Exact private SHA: \`$PRIVATE_EXACT_SHA\`"
+            echo "- Expected base SHA: \`$EXPECTED_BASE_SHA\`"
+            echo "- Private credential: **${CREDENTIAL:-NOT_RUN}**"
+            echo "- Private checkout: **${CHECKOUT:-NOT_RUN}**"
+            echo "- Exact scope: **${SCOPE:-NOT_RUN}**"
+            echo "- Changed files: **${CHANGED:-NOT_RUN}**"
+            echo "- Fixed profile stages: **${PASSED:-0}/${TOTAL:-0}**"
+            echo "- Failure stage: **${FAILURE:-NOT_RUN}**"
+            echo "- Final verdict: **${PROFILE:-NOT_RUN}**"
+            echo
+            echo 'Private source and raw command output remain runner-local. No artifact is uploaded.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Delete private checkout and sealed logs
+        if: always()
+        shell: bash
+        run: |
+          chmod -R u+rwX private-repo 2>/dev/null || true
+          rm -rf private-repo
+          rm -f "$RUNNER_TEMP"/aip-*.log
+
+      - name: Enforce verdict
+        if: always()
+        shell: bash
+        env:
+          PROFILE: ${{ steps.profile.outputs.status }}
+        run: |
+          [[ "$PROFILE" == PASS ]]
