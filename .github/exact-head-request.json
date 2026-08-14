@@ -1,0 +1,8 @@
+{
+  "requestId": "work-ref-consumer-m1",
+  "privateExactSha": "31e4beba0c0332ea175a276f56a4a5b0e1ddb01c2",
+  "expectedBaseSha": "9ecfd9851aa168e75e89464aaa5779931ebd6c5a",
+  "expectedMainSha": "",
+  "validationProfile": "web-product",
+  "expectedChangedFileCount": 7
+}
